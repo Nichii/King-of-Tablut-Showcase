@@ -1,2 +1,2 @@
-# King-of-Tablut-Showcase
+# King of Tablut 3D
 
