@@ -28,10 +28,9 @@ namespace Junnav.KingOfTablut.Gameplay
                 // Call setup class to setup standard tablut board starting positions
                 StandardTablutSetup.SetupStandardPositions(GameBoard);
             }
-            else
+            else if (!GameBoard.SetBoardPositions(customBoardPositions))
             {
-                // Otherwise, setup with the provided custom board positions
-                GameBoard.SetBoardPositions(customBoardPositions);
+                throw new ArgumentException("Custom positions must match the board dimensions.", nameof(customBoardPositions));
             }
         }
 

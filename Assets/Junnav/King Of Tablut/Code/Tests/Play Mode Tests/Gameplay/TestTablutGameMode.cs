@@ -1222,5 +1222,14 @@ namespace Junnav.KingOfTablut.Tests.PlayMode
             Assert.AreEqual(TablutPieceType.Empty, gameMode.GameBoard.GetBoardPositions()[5, 3]);
         }
 
+        [Test]
+        public void RejectsCustomBoardWithInvalidDimensions()
+        {
+            TablutPieceType[,] positions = new TablutPieceType[8, 8];
+
+            Assert.Throws<ArgumentException>(() => new TablutGameMode(positions));
+            Assert.AreEqual(TablutPieceType.WhiteKing, new TablutGameMode().GameBoard.GetBoardPositions()[4, 4]);
+        }
+
     }
 }
