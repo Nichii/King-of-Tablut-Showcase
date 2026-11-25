@@ -170,7 +170,9 @@ namespace Junnav.KingOfTablut.Gameplay
 
             if (GameBoard.IsValidPosition(capturePos) && GameBoard.IsValidPosition(allyPos))
             {
-                if (!IsTargetSquareMyPiece(capturePos) && (IsTargetSquareMyPiece(allyPos) || IsTargetPositionACastleSquare(allyPos)))
+                if (GameBoard.GetBoardPositions()[capturePos.x, capturePos.y] != TablutPieceType.Empty
+                    && !IsTargetSquareMyPiece(capturePos)
+                    && (IsTargetSquareMyPiece(allyPos) || IsTargetPositionACastleSquare(allyPos)))
                 {
                     int currentPlayer = currentPlayerTurn.GetCurrentPlayerTurn();
 

@@ -1188,5 +1188,19 @@ namespace Junnav.KingOfTablut.Tests.PlayMode
             Assert.AreEqual(InvalidMoveMessage.None, gameMode.LastInvalidMoveMessage);
         }
 
+        [Test]
+        public void EmptySquareBetweenAlliesIsNotCaptured()
+        {
+            TablutPieceType[,] positions = new TablutPieceType[9, 9];
+            positions[4, 4] = TablutPieceType.WhiteKing;
+            positions[1, 0] = TablutPieceType.BlackPawn;
+            positions[3, 1] = TablutPieceType.BlackPawn;
+            TablutGameMode gameMode = new(positions);
+
+            Assert.IsTrue(gameMode.MovePiece(new Vector2Int(1, 0), new Vector2Int(1, 1)));
+            Assert.AreEqual(MoveMessage.None, gameMode.LastMoveMessage);
+            Assert.AreEqual(TablutPieceType.BlackPawn, gameMode.GameBoard.GetBoardPositions()[1, 1]);
+        }
+
     }
 }
