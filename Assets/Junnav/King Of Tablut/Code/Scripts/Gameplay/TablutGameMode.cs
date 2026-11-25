@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Junnav.KingOfTablut.Gameplay
@@ -44,102 +45,47 @@ namespace Junnav.KingOfTablut.Gameplay
             return gameBoard.ToString();
         }
 
+        public TablutPlayer CurrentPlayer => (TablutPlayer)currentPlayerTurn.GetCurrentPlayerTurn();
+
+        public bool CanSelectPiece(Vector2Int position)
+        {
+            return GameState == GameState.Playing && gameBoard.IsValidPosition(position) && IsTargetSquareMyPiece(position);
+        }
+
+        /// <summary>
+        /// Lists the squares the current player can move to without changing the match.
+        /// </summary>
+        public IReadOnlyList<Vector2Int> GetLegalDestinations(Vector2Int from)
+        {
+            List<Vector2Int> destinations = new();
+            for (int x = 0; x < TablutBoard.TotalHorizontalSquares; x++)
+            {
+                for (int y = 0; y < TablutBoard.TotalVerticalSquares; y++)
+                {
+                    Vector2Int to = new(x, y);
+                    if (ValidateMove(from, to) == InvalidMoveMessage.None)
+                    {
+                        destinations.Add(to);
+                    }
+                }
+            }
+
+            return destinations;
+        }
+
         public bool MovePiece(Vector2Int from, Vector2Int to)
         {
             // Reset last move messages
             LastInvalidMoveMessage = InvalidMoveMessage.None;
             LastMoveMessage = MoveMessage.None;
 
-            if (GameState != GameState.Playing)
+            LastInvalidMoveMessage = ValidateMove(from, to);
+            if (LastInvalidMoveMessage != InvalidMoveMessage.None)
             {
-                LastInvalidMoveMessage = InvalidMoveMessage.GameEnded;
                 return false;
             }
 
-            // Verify that both the from and to positions are valid
-            if (!gameBoard.IsValidPosition(from) || !gameBoard.IsValidPosition(to))
-            {
-                LastInvalidMoveMessage = InvalidMoveMessage.OutOfBound;
-                return false;
-            }
-
-            // Get the current piece type from the position first
             TablutPieceType currentPieceType = gameBoard.GetPiece(from);
-
-            // Check whose player this piece belongs to
-            TablutPlayer owningPlayer = TablutPlayer.Attacker;
-            switch (currentPieceType)
-            {
-                case TablutPieceType.WhitePawn:
-                case TablutPieceType.WhiteKing:
-                    owningPlayer = TablutPlayer.Defender;
-                    break;
-
-                case TablutPieceType.Empty:
-                    // Do not allow moving empty squares
-                    LastInvalidMoveMessage = InvalidMoveMessage.CannotMoveEmptySpace;
-                    return false;
-            }
-
-            // Check if current player can move this piece
-            if (!currentPlayerTurn.CanPlayerMove((int)owningPlayer))
-            {
-                LastInvalidMoveMessage = InvalidMoveMessage.WrongPlayerTurn;
-                return false;
-            }
-
-            // Only allow moving orthogonally, therefore both x and y cannot be different at the same time
-            if (from.x != to.x && from.y != to.y)
-            {
-                LastInvalidMoveMessage = InvalidMoveMessage.OnlyOrthogonalMovementAllowed;
-                return false;
-            }
-
-            // Check if the destination square is occupied
-            if (gameBoard.GetPiece(to) != TablutPieceType.Empty)
-            {
-                LastInvalidMoveMessage = InvalidMoveMessage.OccupiedSpace;
-                return false;
-            }
-
-            // Check if there are any pieces in the way
-            int xDir = Math.Sign(to.x - from.x);
-            for (int x = from.x + xDir; x != to.x; x += xDir)
-            {
-                if (gameBoard.GetPiece(new Vector2Int(x, to.y)) != TablutPieceType.Empty)
-                {
-                    LastInvalidMoveMessage = InvalidMoveMessage.CannotJumpOverPieces;
-                    return false;
-                }
-                // Also disallow jumping over castle squares
-                else if (IsTargetPositionACastleSquare(new Vector2Int(x, to.y)))
-                {
-                    LastInvalidMoveMessage = InvalidMoveMessage.CannotMoveIntoCastleSquare;
-                    return false;
-                }
-            }
-            int yDir = Math.Sign(to.y - from.y);
-            for (int y = from.y + yDir; y != to.y; y += yDir)
-            {
-                if (gameBoard.GetPiece(new Vector2Int(to.x, y)) != TablutPieceType.Empty)
-                {
-                    LastInvalidMoveMessage = InvalidMoveMessage.CannotJumpOverPieces;
-                    return false;
-                }
-                // Also disallow jumping over castle squares
-                else if (IsTargetPositionACastleSquare(new Vector2Int(to.x, y)))
-                {
-                    LastInvalidMoveMessage = InvalidMoveMessage.CannotMoveIntoCastleSquare;
-                    return false;
-                }
-            }
-
-            // Disallow moving into castle square
-            if (IsTargetPositionACastleSquare(to))
-            {
-                LastInvalidMoveMessage = InvalidMoveMessage.CannotMoveIntoCastleSquare;
-                return false;
-            }
 
             // Now move the piece
             gameBoard.SetPiece(TablutPieceType.Empty, from);
@@ -167,6 +113,91 @@ namespace Junnav.KingOfTablut.Gameplay
             currentPlayerTurn.GoToNextPlayer();
 
             return true;
+        }
+
+        private InvalidMoveMessage ValidateMove(Vector2Int from, Vector2Int to)
+        {
+            if (GameState != GameState.Playing)
+            {
+                return InvalidMoveMessage.GameEnded;
+            }
+
+            // Verify that both the from and to positions are valid
+            if (!gameBoard.IsValidPosition(from) || !gameBoard.IsValidPosition(to))
+            {
+                return InvalidMoveMessage.OutOfBound;
+            }
+
+            // Get the current piece type from the position first
+            TablutPieceType currentPieceType = gameBoard.GetPiece(from);
+
+            // Check whose player this piece belongs to
+            TablutPlayer owningPlayer = TablutPlayer.Attacker;
+            switch (currentPieceType)
+            {
+                case TablutPieceType.WhitePawn:
+                case TablutPieceType.WhiteKing:
+                    owningPlayer = TablutPlayer.Defender;
+                    break;
+
+                case TablutPieceType.Empty:
+                    // Do not allow moving empty squares
+                    return InvalidMoveMessage.CannotMoveEmptySpace;
+            }
+
+            // Check if current player can move this piece
+            if (!currentPlayerTurn.CanPlayerMove((int)owningPlayer))
+            {
+                return InvalidMoveMessage.WrongPlayerTurn;
+            }
+
+            // Only allow moving orthogonally, therefore both x and y cannot be different at the same time
+            if (from.x != to.x && from.y != to.y)
+            {
+                return InvalidMoveMessage.OnlyOrthogonalMovementAllowed;
+            }
+
+            // Check if the destination square is occupied
+            if (gameBoard.GetPiece(to) != TablutPieceType.Empty)
+            {
+                return InvalidMoveMessage.OccupiedSpace;
+            }
+
+            // Check if there are any pieces in the way
+            int xDir = Math.Sign(to.x - from.x);
+            for (int x = from.x + xDir; x != to.x; x += xDir)
+            {
+                if (gameBoard.GetPiece(new Vector2Int(x, to.y)) != TablutPieceType.Empty)
+                {
+                    return InvalidMoveMessage.CannotJumpOverPieces;
+                }
+                // Also disallow jumping over castle squares
+                else if (IsTargetPositionACastleSquare(new Vector2Int(x, to.y)))
+                {
+                    return InvalidMoveMessage.CannotMoveIntoCastleSquare;
+                }
+            }
+            int yDir = Math.Sign(to.y - from.y);
+            for (int y = from.y + yDir; y != to.y; y += yDir)
+            {
+                if (gameBoard.GetPiece(new Vector2Int(to.x, y)) != TablutPieceType.Empty)
+                {
+                    return InvalidMoveMessage.CannotJumpOverPieces;
+                }
+                // Also disallow jumping over castle squares
+                else if (IsTargetPositionACastleSquare(new Vector2Int(to.x, y)))
+                {
+                    return InvalidMoveMessage.CannotMoveIntoCastleSquare;
+                }
+            }
+
+            // Disallow moving into castle square
+            if (IsTargetPositionACastleSquare(to))
+            {
+                return InvalidMoveMessage.CannotMoveIntoCastleSquare;
+            }
+
+            return InvalidMoveMessage.None;
         }
 
         private bool TryCaptureDirection(Vector2Int currentPosition, Vector2Int captureDirection)

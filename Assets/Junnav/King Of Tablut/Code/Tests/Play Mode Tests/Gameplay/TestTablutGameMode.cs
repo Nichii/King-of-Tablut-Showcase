@@ -1172,5 +1172,29 @@ namespace Junnav.KingOfTablut.Tests.PlayMode
             Assert.AreEqual(TablutPieceType.WhiteKing, gameMode.GetPiece(new Vector2Int(4, 4)));
         }
 
+        [Test]
+        public void LegalDestinationsDoNotChangeMatchState()
+        {
+            TablutGameMode gameMode = new();
+            Vector2Int from = new(0, 3);
+
+            Assert.IsFalse(gameMode.MovePiece(from, new Vector2Int(-1, 3)));
+            CollectionAssert.AreEquivalent(new[]
+            {
+                new Vector2Int(0, 0), new Vector2Int(0, 1), new Vector2Int(0, 2),
+                new Vector2Int(1, 3), new Vector2Int(2, 3), new Vector2Int(3, 3)
+            }, gameMode.GetLegalDestinations(from));
+            Assert.IsTrue(gameMode.CanSelectPiece(from));
+            Assert.IsFalse(gameMode.CanSelectPiece(new Vector2Int(4, 4)));
+            CollectionAssert.IsEmpty(gameMode.GetLegalDestinations(new Vector2Int(4, 4)));
+
+            Assert.AreEqual(TablutPlayer.Attacker, gameMode.CurrentPlayer);
+            Assert.AreEqual(TablutPieceType.BlackPawn, gameMode.GetPiece(from));
+            Assert.AreEqual(TablutPieceType.Empty, gameMode.GetPiece(new Vector2Int(1, 3)));
+            Assert.AreEqual(GameState.Playing, gameMode.GameState);
+            Assert.AreEqual(InvalidMoveMessage.OutOfBound, gameMode.LastInvalidMoveMessage);
+            Assert.AreEqual(MoveMessage.None, gameMode.LastMoveMessage);
+        }
+
     }
 }
