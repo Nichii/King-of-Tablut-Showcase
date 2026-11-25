@@ -3,6 +3,7 @@
     "rootNamespace": "",
     "references": [
         "UnityEngine.TestRunner",
+        "UnityEngine.UI",
         "UnityEditor.TestRunner",
         "Junnav.KingOfTablut"
     ],

@@ -9,27 +9,19 @@ namespace Junnav.KingOfTablut
         [SerializeField]
         private float positionSpacing = 0.175f;
 
-        private void Start()
+        public Vector3 GetLocalPosition(Vector2Int position)
         {
-            // Spawn empty parent objects for Tablut pieces to be parented to, starting from top left
-            for (int x = 0; x < TablutBoard.TotalHorizontalSquares; x++)
-            {
-                for (int y = 0; y < TablutBoard.TotalVerticalSquares; y++)
-                {
-                    // We'll store the name of the position on the game object itself
-                    GameObject positionParentObj = new($"Position ({x}, {y})");
+            return new Vector3((position.x - TablutBoard.CenterHorizontalSquare) * positionSpacing, 0.0f,
+                (position.y - TablutBoard.CenterVerticalSquare) * positionSpacing);
+        }
 
-                    // Parent the object to current game object
-                    positionParentObj.transform.SetParent(transform, false);
+        public Vector2Int GetBoardPosition(Vector3 worldPosition)
+        {
+            Vector3 localPosition = transform.InverseTransformPoint(worldPosition);
 
-                    // Calculate the difference from the center square and scaled by the position spacing
-                    float parentPosX = (x - TablutBoard.CenterHorizontalSquare) * positionSpacing;
-                    float parentPosY = (y - TablutBoard.CenterVerticalSquare) * positionSpacing;
-
-                    // Our Y is the representation of Y on chess board, not the height in 3D world
-                    positionParentObj.transform.localPosition = new Vector3(parentPosX, 0.0f, parentPosY);
-                }
-            }
+            // Board Y follows world Z. Half-square boundaries belong to the next square.
+            return new Vector2Int(Mathf.FloorToInt(localPosition.x / positionSpacing + 0.5f) + TablutBoard.CenterHorizontalSquare,
+                Mathf.FloorToInt(localPosition.z / positionSpacing + 0.5f) + TablutBoard.CenterVerticalSquare);
         }
     }
 }

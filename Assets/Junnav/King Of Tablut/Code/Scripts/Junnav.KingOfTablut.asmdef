@@ -1,3 +1,4 @@
 {
-	"name": "Junnav.KingOfTablut"
+	"name": "Junnav.KingOfTablut",
+	"references": ["UnityEngine.UI"]
 }
