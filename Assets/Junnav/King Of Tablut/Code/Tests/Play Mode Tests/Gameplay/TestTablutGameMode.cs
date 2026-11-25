@@ -1175,5 +1175,18 @@ namespace Junnav.KingOfTablut.Tests.PlayMode
             // Check that the move message has been reset
             Assert.AreEqual(MoveMessage.None, gameMode.LastMoveMessage);
         }
+        [TestCase(2, 1, 6, 1)]
+        [TestCase(1, 2, 1, 6)]
+        public void CanCrossCastleAxisAwayFromCastle(int fromX, int fromY, int toX, int toY)
+        {
+            TablutPieceType[,] positions = new TablutPieceType[9, 9];
+            positions[4, 4] = TablutPieceType.WhiteKing;
+            positions[fromX, fromY] = TablutPieceType.BlackPawn;
+            TablutGameMode gameMode = new(positions);
+
+            Assert.IsTrue(gameMode.MovePiece(new Vector2Int(fromX, fromY), new Vector2Int(toX, toY)));
+            Assert.AreEqual(InvalidMoveMessage.None, gameMode.LastInvalidMoveMessage);
+        }
+
     }
 }

@@ -104,7 +104,7 @@ namespace Junnav.KingOfTablut.Gameplay
                     return false;
                 }
                 // Also disallow jumping over castle squares
-                else if (x == TablutBoard.CastleSquare.x)
+                else if (IsTargetPositionACastleSquare(new Vector2Int(x, to.y)))
                 {
                     LastInvalidMoveMessage = InvalidMoveMessage.CannotMoveIntoCastleSquare;
                     return false;
@@ -119,7 +119,7 @@ namespace Junnav.KingOfTablut.Gameplay
                     return false;
                 }
                 // Also disallow jumping over castle squares
-                else if (y == TablutBoard.CastleSquare.y)
+                else if (IsTargetPositionACastleSquare(new Vector2Int(to.x, y)))
                 {
                     LastInvalidMoveMessage = InvalidMoveMessage.CannotMoveIntoCastleSquare;
                     return false;
