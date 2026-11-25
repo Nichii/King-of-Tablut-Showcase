@@ -14,7 +14,7 @@ namespace Junnav.KingOfTablut.Gameplay
             Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right
         };
 
-        public TablutBoard GameBoard { get; private set; } = new TablutBoard();
+        private readonly TablutBoard gameBoard = new();
         public GameState GameState { get; private set; } = GameState.Playing;
         public InvalidMoveMessage LastInvalidMoveMessage { get; private set; } = InvalidMoveMessage.None;
         public MoveMessage LastMoveMessage { get; private set; } = MoveMessage.None;
@@ -26,12 +26,22 @@ namespace Junnav.KingOfTablut.Gameplay
             if (customBoardPositions == null)
             {
                 // Call setup class to setup standard tablut board starting positions
-                StandardTablutSetup.SetupStandardPositions(GameBoard);
+                StandardTablutSetup.SetupStandardPositions(gameBoard);
             }
-            else if (!GameBoard.SetBoardPositions(customBoardPositions))
+            else if (!gameBoard.SetBoardPositions(customBoardPositions))
             {
                 throw new ArgumentException("Custom positions must match the board dimensions.", nameof(customBoardPositions));
             }
+        }
+
+        public TablutPieceType GetPiece(Vector2Int position)
+        {
+            return gameBoard.GetPiece(position);
+        }
+
+        public override string ToString()
+        {
+            return gameBoard.ToString();
         }
 
         public bool MovePiece(Vector2Int from, Vector2Int to)
@@ -47,15 +57,14 @@ namespace Junnav.KingOfTablut.Gameplay
             }
 
             // Verify that both the from and to positions are valid
-            if (!GameBoard.IsValidPosition(from) || !GameBoard.IsValidPosition(to))
+            if (!gameBoard.IsValidPosition(from) || !gameBoard.IsValidPosition(to))
             {
                 LastInvalidMoveMessage = InvalidMoveMessage.OutOfBound;
                 return false;
             }
 
             // Get the current piece type from the position first
-            TablutPieceType[,] boardPositions = GameBoard.GetBoardPositions();
-            TablutPieceType currentPieceType = boardPositions[from.x, from.y];
+            TablutPieceType currentPieceType = gameBoard.GetPiece(from);
 
             // Check whose player this piece belongs to
             TablutPlayer owningPlayer = TablutPlayer.Attacker;
@@ -87,7 +96,7 @@ namespace Junnav.KingOfTablut.Gameplay
             }
 
             // Check if the destination square is occupied
-            if (boardPositions[to.x, to.y] != TablutPieceType.Empty)
+            if (gameBoard.GetPiece(to) != TablutPieceType.Empty)
             {
                 LastInvalidMoveMessage = InvalidMoveMessage.OccupiedSpace;
                 return false;
@@ -97,7 +106,7 @@ namespace Junnav.KingOfTablut.Gameplay
             int xDir = Math.Sign(to.x - from.x);
             for (int x = from.x + xDir; x != to.x; x += xDir)
             {
-                if (boardPositions[x, to.y] != TablutPieceType.Empty)
+                if (gameBoard.GetPiece(new Vector2Int(x, to.y)) != TablutPieceType.Empty)
                 {
                     LastInvalidMoveMessage = InvalidMoveMessage.CannotJumpOverPieces;
                     return false;
@@ -112,7 +121,7 @@ namespace Junnav.KingOfTablut.Gameplay
             int yDir = Math.Sign(to.y - from.y);
             for (int y = from.y + yDir; y != to.y; y += yDir)
             {
-                if (boardPositions[to.x, y] != TablutPieceType.Empty)
+                if (gameBoard.GetPiece(new Vector2Int(to.x, y)) != TablutPieceType.Empty)
                 {
                     LastInvalidMoveMessage = InvalidMoveMessage.CannotJumpOverPieces;
                     return false;
@@ -133,8 +142,8 @@ namespace Junnav.KingOfTablut.Gameplay
             }
 
             // Now move the piece
-            GameBoard.SetPiece(TablutPieceType.Empty, from);
-            GameBoard.SetPiece(currentPieceType, to);
+            gameBoard.SetPiece(TablutPieceType.Empty, from);
+            gameBoard.SetPiece(currentPieceType, to);
 
             // Check for captures for the piece last moved
             TryCaptureDirection(to, Vector2Int.up);
@@ -167,9 +176,9 @@ namespace Junnav.KingOfTablut.Gameplay
             // Check that ally (or empty castle) is on the other side to capture this piece
             Vector2Int allyPos = currentPosition + captureDirection * 2;
 
-            if (GameBoard.IsValidPosition(capturePos) && GameBoard.IsValidPosition(allyPos))
+            if (gameBoard.IsValidPosition(capturePos) && gameBoard.IsValidPosition(allyPos))
             {
-                if (GameBoard.GetBoardPositions()[capturePos.x, capturePos.y] != TablutPieceType.Empty
+                if (gameBoard.GetPiece(capturePos) != TablutPieceType.Empty
                     && !IsTargetSquareMyPiece(capturePos)
                     && (IsTargetSquareMyPiece(allyPos) || IsTargetPositionACastleSquare(allyPos)))
                 {
@@ -197,7 +206,6 @@ namespace Junnav.KingOfTablut.Gameplay
                         // If King is near or inside a castle, count how many captors are surrounding the King
                         if (blackPawnsRequiredForCapture > RegularCaptorCount)
                         {
-                            TablutPieceType[,] boardPositions = GameBoard.GetBoardPositions();
 
                             // Just count how many black pawns are surrounding that square
                             int blackPawnCounts = 0;
@@ -205,7 +213,7 @@ namespace Junnav.KingOfTablut.Gameplay
                             for (int i = 0; i < s_surroundingPositions.Length; i++)
                             {
                                 Vector2Int offsetPos = s_surroundingPositions[i] + capturePos;
-                                if (boardPositions[offsetPos.x, offsetPos.y] == TablutPieceType.BlackPawn)
+                                if (gameBoard.GetPiece(offsetPos) == TablutPieceType.BlackPawn)
                                 {
                                     blackPawnCounts++;
                                 }
@@ -244,7 +252,7 @@ namespace Junnav.KingOfTablut.Gameplay
                         }
 
                         // Destroy the pawn at that position too
-                        GameBoard.SetPiece(TablutPieceType.Empty, capturePos);
+                        gameBoard.SetPiece(TablutPieceType.Empty, capturePos);
 
                         return true;
                     }
@@ -257,8 +265,7 @@ namespace Junnav.KingOfTablut.Gameplay
         private bool IsTargetSquareMyPiece(Vector2Int targetPosition)
         {
             int currentPlayer = currentPlayerTurn.GetCurrentPlayerTurn();
-            TablutPieceType[,] boardPositions = GameBoard.GetBoardPositions();
-            TablutPieceType pieceTypeAtTarget = boardPositions[targetPosition.x, targetPosition.y];
+            TablutPieceType pieceTypeAtTarget = gameBoard.GetPiece(targetPosition);
 
             if (currentPlayer == (int)TablutPlayer.Attacker)
             {
@@ -285,8 +292,7 @@ namespace Junnav.KingOfTablut.Gameplay
 
         private bool IsTargetSquareAWhiteKing(Vector2Int targetPosition)
         {
-            TablutPieceType[,] boardPositions = GameBoard.GetBoardPositions();
-            TablutPieceType pieceTypeAtTarget = boardPositions[targetPosition.x, targetPosition.y];
+            TablutPieceType pieceTypeAtTarget = gameBoard.GetPiece(targetPosition);
 
             return pieceTypeAtTarget == TablutPieceType.WhiteKing;
         }

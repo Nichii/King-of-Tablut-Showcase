@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Text;
 using UnityEngine;
 
@@ -35,14 +35,19 @@ namespace Junnav.KingOfTablut.Gameplay
                 return false;
             }
 
-            boardPositions = customBoardPositions;
+            boardPositions = (TablutPieceType[,])customBoardPositions.Clone();
 
             return true;
         }
 
         public TablutPieceType[,] GetBoardPositions()
         {
-            return boardPositions;
+            return (TablutPieceType[,])boardPositions.Clone();
+        }
+
+        public TablutPieceType GetPiece(Vector2Int position)
+        {
+            return boardPositions[position.x, position.y];
         }
 
         public override string ToString()

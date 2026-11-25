@@ -16,38 +16,34 @@ namespace Junnav.KingOfTablut.Tests.PlayMode
             // Setup game mode
             TablutGameMode gameMode = new();
 
-            // Get the board positions
-            TablutBoard tablutBoard = gameMode.GameBoard;
-            TablutPieceType[,] boardPositions = tablutBoard.GetBoardPositions();
-
             // Check to make sure the board has been setup in standard positions
-            Assert.AreEqual(TablutPieceType.WhiteKing, boardPositions[4, 4], "The White King is not at the right position!");
-            Assert.AreEqual(TablutPieceType.WhitePawn, boardPositions[4, 2], "The White Pawn is not at the right position!");
-            Assert.AreEqual(TablutPieceType.WhitePawn, boardPositions[4, 3], "The White Pawn is not at the right position!");
-            Assert.AreEqual(TablutPieceType.WhitePawn, boardPositions[2, 4], "The White Pawn is not at the right position!");
-            Assert.AreEqual(TablutPieceType.WhitePawn, boardPositions[3, 4], "The White Pawn is not at the right position!");
-            Assert.AreEqual(TablutPieceType.WhitePawn, boardPositions[6, 4], "The White Pawn is not at the right position!");
-            Assert.AreEqual(TablutPieceType.WhitePawn, boardPositions[4, 5], "The White Pawn is not at the right position!");
-            Assert.AreEqual(TablutPieceType.WhitePawn, boardPositions[4, 6], "The White Pawn is not at the right position!");
-            Assert.AreEqual(TablutPieceType.BlackPawn, boardPositions[0, 3], "The Black Pawn is not at the right position!");
-            Assert.AreEqual(TablutPieceType.BlackPawn, boardPositions[0, 4], "The Black Pawn is not at the right position!");
-            Assert.AreEqual(TablutPieceType.BlackPawn, boardPositions[0, 5], "The Black Pawn is not at the right position!");
-            Assert.AreEqual(TablutPieceType.BlackPawn, boardPositions[1, 4], "The Black Pawn is not at the right position!");
-            Assert.AreEqual(TablutPieceType.BlackPawn, boardPositions[3, 0], "The Black Pawn is not at the right position!");
-            Assert.AreEqual(TablutPieceType.BlackPawn, boardPositions[4, 0], "The Black Pawn is not at the right position!");
-            Assert.AreEqual(TablutPieceType.BlackPawn, boardPositions[5, 0], "The Black Pawn is not at the right position!");
-            Assert.AreEqual(TablutPieceType.BlackPawn, boardPositions[4, 1], "The Black Pawn is not at the right position!");
-            Assert.AreEqual(TablutPieceType.BlackPawn, boardPositions[7, 4], "The Black Pawn is not at the right position!");
-            Assert.AreEqual(TablutPieceType.BlackPawn, boardPositions[8, 3], "The Black Pawn is not at the right position!");
-            Assert.AreEqual(TablutPieceType.BlackPawn, boardPositions[8, 4], "The Black Pawn is not at the right position!");
-            Assert.AreEqual(TablutPieceType.BlackPawn, boardPositions[8, 5], "The Black Pawn is not at the right position!");
-            Assert.AreEqual(TablutPieceType.BlackPawn, boardPositions[4, 7], "The Black Pawn is not at the right position!");
-            Assert.AreEqual(TablutPieceType.BlackPawn, boardPositions[3, 8], "The Black Pawn is not at the right position!");
-            Assert.AreEqual(TablutPieceType.BlackPawn, boardPositions[4, 8], "The Black Pawn is not at the right position!");
-            Assert.AreEqual(TablutPieceType.BlackPawn, boardPositions[5, 8], "The Black Pawn is not at the right position!");
+            Assert.AreEqual(TablutPieceType.WhiteKing, gameMode.GetPiece(new Vector2Int(4, 4)), "The White King is not at the right position!");
+            Assert.AreEqual(TablutPieceType.WhitePawn, gameMode.GetPiece(new Vector2Int(4, 2)), "The White Pawn is not at the right position!");
+            Assert.AreEqual(TablutPieceType.WhitePawn, gameMode.GetPiece(new Vector2Int(4, 3)), "The White Pawn is not at the right position!");
+            Assert.AreEqual(TablutPieceType.WhitePawn, gameMode.GetPiece(new Vector2Int(2, 4)), "The White Pawn is not at the right position!");
+            Assert.AreEqual(TablutPieceType.WhitePawn, gameMode.GetPiece(new Vector2Int(3, 4)), "The White Pawn is not at the right position!");
+            Assert.AreEqual(TablutPieceType.WhitePawn, gameMode.GetPiece(new Vector2Int(6, 4)), "The White Pawn is not at the right position!");
+            Assert.AreEqual(TablutPieceType.WhitePawn, gameMode.GetPiece(new Vector2Int(4, 5)), "The White Pawn is not at the right position!");
+            Assert.AreEqual(TablutPieceType.WhitePawn, gameMode.GetPiece(new Vector2Int(4, 6)), "The White Pawn is not at the right position!");
+            Assert.AreEqual(TablutPieceType.BlackPawn, gameMode.GetPiece(new Vector2Int(0, 3)), "The Black Pawn is not at the right position!");
+            Assert.AreEqual(TablutPieceType.BlackPawn, gameMode.GetPiece(new Vector2Int(0, 4)), "The Black Pawn is not at the right position!");
+            Assert.AreEqual(TablutPieceType.BlackPawn, gameMode.GetPiece(new Vector2Int(0, 5)), "The Black Pawn is not at the right position!");
+            Assert.AreEqual(TablutPieceType.BlackPawn, gameMode.GetPiece(new Vector2Int(1, 4)), "The Black Pawn is not at the right position!");
+            Assert.AreEqual(TablutPieceType.BlackPawn, gameMode.GetPiece(new Vector2Int(3, 0)), "The Black Pawn is not at the right position!");
+            Assert.AreEqual(TablutPieceType.BlackPawn, gameMode.GetPiece(new Vector2Int(4, 0)), "The Black Pawn is not at the right position!");
+            Assert.AreEqual(TablutPieceType.BlackPawn, gameMode.GetPiece(new Vector2Int(5, 0)), "The Black Pawn is not at the right position!");
+            Assert.AreEqual(TablutPieceType.BlackPawn, gameMode.GetPiece(new Vector2Int(4, 1)), "The Black Pawn is not at the right position!");
+            Assert.AreEqual(TablutPieceType.BlackPawn, gameMode.GetPiece(new Vector2Int(7, 4)), "The Black Pawn is not at the right position!");
+            Assert.AreEqual(TablutPieceType.BlackPawn, gameMode.GetPiece(new Vector2Int(8, 3)), "The Black Pawn is not at the right position!");
+            Assert.AreEqual(TablutPieceType.BlackPawn, gameMode.GetPiece(new Vector2Int(8, 4)), "The Black Pawn is not at the right position!");
+            Assert.AreEqual(TablutPieceType.BlackPawn, gameMode.GetPiece(new Vector2Int(8, 5)), "The Black Pawn is not at the right position!");
+            Assert.AreEqual(TablutPieceType.BlackPawn, gameMode.GetPiece(new Vector2Int(4, 7)), "The Black Pawn is not at the right position!");
+            Assert.AreEqual(TablutPieceType.BlackPawn, gameMode.GetPiece(new Vector2Int(3, 8)), "The Black Pawn is not at the right position!");
+            Assert.AreEqual(TablutPieceType.BlackPawn, gameMode.GetPiece(new Vector2Int(4, 8)), "The Black Pawn is not at the right position!");
+            Assert.AreEqual(TablutPieceType.BlackPawn, gameMode.GetPiece(new Vector2Int(5, 8)), "The Black Pawn is not at the right position!");
 
             // Output human readable board positions to log so that we can verify the positions with our own eyes
-            Debug.Log($"Added pieces locations:{Environment.NewLine}{tablutBoard}");
+            Debug.Log($"Added pieces locations:{Environment.NewLine}{gameMode}");
         }
 
         [Test]
@@ -84,16 +80,12 @@ namespace Junnav.KingOfTablut.Tests.PlayMode
             // Check that attacker cannot move a piece into it's own piece's location
             Assert.IsFalse(validMove);
 
-            // Get the board positions
-            TablutBoard tablutBoard = gameMode.GameBoard;
-            TablutPieceType[,] boardPositions = tablutBoard.GetBoardPositions();
-
             // Make sure that the pieces hasn't been moved
-            Assert.AreEqual(TablutPieceType.BlackPawn, boardPositions[0, 3]);
-            Assert.AreEqual(TablutPieceType.BlackPawn, boardPositions[0, 4]);
+            Assert.AreEqual(TablutPieceType.BlackPawn, gameMode.GetPiece(new Vector2Int(0, 3)));
+            Assert.AreEqual(TablutPieceType.BlackPawn, gameMode.GetPiece(new Vector2Int(0, 4)));
 
             // Output human readable board positions to log so that we can verify the positions with our own eyes
-            Debug.Log($"Updated pieces locations:{Environment.NewLine}{tablutBoard}");
+            Debug.Log($"Updated pieces locations:{Environment.NewLine}{gameMode}");
         }
 
         [Test]
@@ -111,16 +103,12 @@ namespace Junnav.KingOfTablut.Tests.PlayMode
             // Check that attacker cannot move an empty piece
             Assert.IsFalse(validMove);
 
-            // Get the board positions
-            TablutBoard tablutBoard = gameMode.GameBoard;
-            TablutPieceType[,] boardPositions = tablutBoard.GetBoardPositions();
-
             // Make sure that the squares are still empty
-            Assert.AreEqual(TablutPieceType.Empty, boardPositions[0, 2]);
-            Assert.AreEqual(TablutPieceType.Empty, boardPositions[0, 1]);
+            Assert.AreEqual(TablutPieceType.Empty, gameMode.GetPiece(new Vector2Int(0, 2)));
+            Assert.AreEqual(TablutPieceType.Empty, gameMode.GetPiece(new Vector2Int(0, 1)));
 
             // Output human readable board positions to log so that we can verify the positions with our own eyes
-            Debug.Log($"Updated pieces locations:{Environment.NewLine}{tablutBoard}");
+            Debug.Log($"Updated pieces locations:{Environment.NewLine}{gameMode}");
         }
 
         [Test]
@@ -138,15 +126,11 @@ namespace Junnav.KingOfTablut.Tests.PlayMode
             // Check that attacker cannot move a piece into it's own location
             Assert.IsFalse(validMove);
 
-            // Get the board positions
-            TablutBoard tablutBoard = gameMode.GameBoard;
-            TablutPieceType[,] boardPositions = tablutBoard.GetBoardPositions();
-
             // Make sure that the pieces hasn't been moved
-            Assert.AreEqual(TablutPieceType.BlackPawn, boardPositions[0, 5]);
+            Assert.AreEqual(TablutPieceType.BlackPawn, gameMode.GetPiece(new Vector2Int(0, 5)));
 
             // Output human readable board positions to log so that we can verify the positions with our own eyes
-            Debug.Log($"Updated pieces locations:{Environment.NewLine}{tablutBoard}");
+            Debug.Log($"Updated pieces locations:{Environment.NewLine}{gameMode}");
         }
 
         [Test]
@@ -156,8 +140,6 @@ namespace Junnav.KingOfTablut.Tests.PlayMode
             TablutGameMode gameMode = new();
 
             // Get a reference to the board positions
-            TablutBoard tablutBoard = gameMode.GameBoard;
-            TablutPieceType[,] boardPositions = tablutBoard.GetBoardPositions();
 
             // =====================================================================================
             // TURN ONE
@@ -167,16 +149,16 @@ namespace Junnav.KingOfTablut.Tests.PlayMode
             Assert.AreEqual(InvalidMoveMessage.WrongPlayerTurn, gameMode.LastInvalidMoveMessage);
             Assert.IsFalse(validMove);
             // Check that the piece has NOT been moved
-            Assert.AreEqual(TablutPieceType.WhitePawn, boardPositions[2, 4]);
-            Assert.AreEqual(TablutPieceType.Empty, boardPositions[2, 5]);
+            Assert.AreEqual(TablutPieceType.WhitePawn, gameMode.GetPiece(new Vector2Int(2, 4)));
+            Assert.AreEqual(TablutPieceType.Empty, gameMode.GetPiece(new Vector2Int(2, 5)));
 
             // Attacker should be able to move on the first turn
             validMove = gameMode.MovePiece(new Vector2Int(0, 3), new Vector2Int(0, 2));
             Assert.AreEqual(InvalidMoveMessage.None, gameMode.LastInvalidMoveMessage);
             Assert.IsTrue(validMove);
             // Check that the piece has been moved
-            Assert.AreEqual(TablutPieceType.BlackPawn, boardPositions[0, 2]);
-            Assert.AreEqual(TablutPieceType.Empty, boardPositions[0, 3]);
+            Assert.AreEqual(TablutPieceType.BlackPawn, gameMode.GetPiece(new Vector2Int(0, 2)));
+            Assert.AreEqual(TablutPieceType.Empty, gameMode.GetPiece(new Vector2Int(0, 3)));
 
             // =====================================================================================
             // TURN TWO
@@ -186,16 +168,16 @@ namespace Junnav.KingOfTablut.Tests.PlayMode
             Assert.AreEqual(InvalidMoveMessage.WrongPlayerTurn, gameMode.LastInvalidMoveMessage);
             Assert.IsFalse(validMove);
             // Check that the piece has NOT been moved
-            Assert.AreEqual(TablutPieceType.BlackPawn, boardPositions[4, 7]);
-            Assert.AreEqual(TablutPieceType.Empty, boardPositions[5, 7]);
+            Assert.AreEqual(TablutPieceType.BlackPawn, gameMode.GetPiece(new Vector2Int(4, 7)));
+            Assert.AreEqual(TablutPieceType.Empty, gameMode.GetPiece(new Vector2Int(5, 7)));
 
             // Defender should be able to move on the second turn
             validMove = gameMode.MovePiece(new Vector2Int(4, 6), new Vector2Int(3, 6));
             Assert.AreEqual(InvalidMoveMessage.None, gameMode.LastInvalidMoveMessage);
             Assert.IsTrue(validMove);
             // Check that the piece has been moved
-            Assert.AreEqual(TablutPieceType.WhitePawn, boardPositions[3, 6]);
-            Assert.AreEqual(TablutPieceType.Empty, boardPositions[4, 6]);
+            Assert.AreEqual(TablutPieceType.WhitePawn, gameMode.GetPiece(new Vector2Int(3, 6)));
+            Assert.AreEqual(TablutPieceType.Empty, gameMode.GetPiece(new Vector2Int(4, 6)));
 
             // =====================================================================================
             // TURN THREE
@@ -205,19 +187,19 @@ namespace Junnav.KingOfTablut.Tests.PlayMode
             Assert.AreEqual(InvalidMoveMessage.WrongPlayerTurn, gameMode.LastInvalidMoveMessage);
             Assert.IsFalse(validMove);
             // Check that the piece has NOT been moved
-            Assert.AreEqual(TablutPieceType.WhitePawn, boardPositions[5, 4]);
-            Assert.AreEqual(TablutPieceType.Empty, boardPositions[5, 3]);
+            Assert.AreEqual(TablutPieceType.WhitePawn, gameMode.GetPiece(new Vector2Int(5, 4)));
+            Assert.AreEqual(TablutPieceType.Empty, gameMode.GetPiece(new Vector2Int(5, 3)));
 
             // Attacker should be able to move on the third turn
             validMove = gameMode.MovePiece(new Vector2Int(8, 5), new Vector2Int(8, 7));
             Assert.AreEqual(InvalidMoveMessage.None, gameMode.LastInvalidMoveMessage);
             Assert.IsTrue(validMove);
             // Check that the piece has been moved
-            Assert.AreEqual(TablutPieceType.BlackPawn, boardPositions[8, 7]);
-            Assert.AreEqual(TablutPieceType.Empty, boardPositions[8, 5]);
+            Assert.AreEqual(TablutPieceType.BlackPawn, gameMode.GetPiece(new Vector2Int(8, 7)));
+            Assert.AreEqual(TablutPieceType.Empty, gameMode.GetPiece(new Vector2Int(8, 5)));
 
             // Output human readable board positions to log so that we can verify the positions with our own eyes
-            Debug.Log($"Updated pieces locations:{Environment.NewLine}{tablutBoard}");
+            Debug.Log($"Updated pieces locations:{Environment.NewLine}{gameMode}");
         }
 
         [Test]
@@ -244,16 +226,12 @@ namespace Junnav.KingOfTablut.Tests.PlayMode
             // Check that attacker cannot jump a piece over another piece
             Assert.IsFalse(validMove);
 
-            // Get the board positions
-            TablutBoard tablutBoard = gameMode.GameBoard;
-            TablutPieceType[,] boardPositions = tablutBoard.GetBoardPositions();
-
             // Make sure that the pieces hasn't been moved
-            Assert.AreEqual(TablutPieceType.BlackPawn, boardPositions[0, 3]);
-            Assert.AreEqual(TablutPieceType.BlackPawn, boardPositions[5, 8]);
+            Assert.AreEqual(TablutPieceType.BlackPawn, gameMode.GetPiece(new Vector2Int(0, 3)));
+            Assert.AreEqual(TablutPieceType.BlackPawn, gameMode.GetPiece(new Vector2Int(5, 8)));
 
             // Output human readable board positions to log so that we can verify the positions with our own eyes
-            Debug.Log($"Updated pieces locations:{Environment.NewLine}{tablutBoard}");
+            Debug.Log($"Updated pieces locations:{Environment.NewLine}{gameMode}");
         }
 
         [Test]
@@ -262,18 +240,14 @@ namespace Junnav.KingOfTablut.Tests.PlayMode
             // Setup game mode
             TablutGameMode gameMode = new();
 
-            // Get the board positions
-            TablutBoard tablutBoard = gameMode.GameBoard;
-            TablutPieceType[,] boardPositions = tablutBoard.GetBoardPositions();
-
             // Attacker tries to move diagonally
             bool validMove = gameMode.MovePiece(new Vector2Int(5, 8), new Vector2Int(6, 7));
 
             // Check that attacker cannot move diagonally
             Assert.AreEqual(InvalidMoveMessage.OnlyOrthogonalMovementAllowed, gameMode.LastInvalidMoveMessage);
             Assert.IsFalse(validMove);
-            Assert.AreEqual(TablutPieceType.BlackPawn, boardPositions[5, 8]);
-            Assert.AreEqual(TablutPieceType.Empty, boardPositions[6, 7]);
+            Assert.AreEqual(TablutPieceType.BlackPawn, gameMode.GetPiece(new Vector2Int(5, 8)));
+            Assert.AreEqual(TablutPieceType.Empty, gameMode.GetPiece(new Vector2Int(6, 7)));
 
             // Attacker tries to make a random non-orthogonal movement
             validMove = gameMode.MovePiece(new Vector2Int(7, 4), new Vector2Int(2, 5));
@@ -281,8 +255,8 @@ namespace Junnav.KingOfTablut.Tests.PlayMode
             // Check that attacker cannot move in a random non-orthogonal movement
             Assert.AreEqual(InvalidMoveMessage.OnlyOrthogonalMovementAllowed, gameMode.LastInvalidMoveMessage);
             Assert.IsFalse(validMove);
-            Assert.AreEqual(TablutPieceType.BlackPawn, boardPositions[7, 4]);
-            Assert.AreEqual(TablutPieceType.Empty, boardPositions[2, 5]);
+            Assert.AreEqual(TablutPieceType.BlackPawn, gameMode.GetPiece(new Vector2Int(7, 4)));
+            Assert.AreEqual(TablutPieceType.Empty, gameMode.GetPiece(new Vector2Int(2, 5)));
 
             // Attacker tries to make a valid vertical movement
             validMove = gameMode.MovePiece(new Vector2Int(7, 4), new Vector2Int(7, 0));
@@ -290,8 +264,8 @@ namespace Junnav.KingOfTablut.Tests.PlayMode
             // Check that attacker can move
             Assert.AreEqual(InvalidMoveMessage.None, gameMode.LastInvalidMoveMessage);
             Assert.IsTrue(validMove);
-            Assert.AreEqual(TablutPieceType.Empty, boardPositions[7, 4]);
-            Assert.AreEqual(TablutPieceType.BlackPawn, boardPositions[7, 0]);
+            Assert.AreEqual(TablutPieceType.Empty, gameMode.GetPiece(new Vector2Int(7, 4)));
+            Assert.AreEqual(TablutPieceType.BlackPawn, gameMode.GetPiece(new Vector2Int(7, 0)));
 
             // Defender tries to make a valid horizontal movement
             validMove = gameMode.MovePiece(new Vector2Int(4, 2), new Vector2Int(8, 2));
@@ -299,11 +273,11 @@ namespace Junnav.KingOfTablut.Tests.PlayMode
             // Check that defender can move
             Assert.AreEqual(InvalidMoveMessage.None, gameMode.LastInvalidMoveMessage);
             Assert.IsTrue(validMove);
-            Assert.AreEqual(TablutPieceType.Empty, boardPositions[4, 2]);
-            Assert.AreEqual(TablutPieceType.WhitePawn, boardPositions[8, 2]);
+            Assert.AreEqual(TablutPieceType.Empty, gameMode.GetPiece(new Vector2Int(4, 2)));
+            Assert.AreEqual(TablutPieceType.WhitePawn, gameMode.GetPiece(new Vector2Int(8, 2)));
 
             // Output human readable board positions to log so that we can verify the positions with our own eyes
-            Debug.Log($"Updated pieces locations:{Environment.NewLine}{tablutBoard}");
+            Debug.Log($"Updated pieces locations:{Environment.NewLine}{gameMode}");
         }
 
         [Test]
@@ -339,11 +313,8 @@ namespace Junnav.KingOfTablut.Tests.PlayMode
             // Check that attacker cannot make invalid out of bound moves
             Assert.IsFalse(validMove);
 
-            // Get the board positions
-            TablutBoard tablutBoard = gameMode.GameBoard;
-
             // Output human readable board positions to log so that we can verify the positions with our own eyes
-            Debug.Log($"Updated pieces locations:{Environment.NewLine}{tablutBoard}");
+            Debug.Log($"Updated pieces locations:{Environment.NewLine}{gameMode}");
         }
 
         [Test]
@@ -370,8 +341,7 @@ namespace Junnav.KingOfTablut.Tests.PlayMode
             Assert.AreEqual(InvalidMoveMessage.CannotMoveIntoCastleSquare, gameMode.LastInvalidMoveMessage);
 
             // Output human readable board positions to log so that we can verify the positions with our own eyes
-            TablutBoard tablutBoard = gameMode.GameBoard;
-            Debug.Log($"Updated pieces locations:{Environment.NewLine}{tablutBoard}");
+            Debug.Log($"Updated pieces locations:{Environment.NewLine}{gameMode}");
         }
 
         [Test]
@@ -404,8 +374,7 @@ namespace Junnav.KingOfTablut.Tests.PlayMode
             Assert.AreEqual(InvalidMoveMessage.CannotMoveIntoCastleSquare, gameMode.LastInvalidMoveMessage);
 
             // Output human readable board positions to log so that we can verify the positions with our own eyes
-            TablutBoard tablutBoard = gameMode.GameBoard;
-            Debug.Log($"Updated pieces locations:{Environment.NewLine}{tablutBoard}");
+            Debug.Log($"Updated pieces locations:{Environment.NewLine}{gameMode}");
         }
 
         [Test]
@@ -438,8 +407,7 @@ namespace Junnav.KingOfTablut.Tests.PlayMode
             Assert.AreEqual(InvalidMoveMessage.CannotMoveIntoCastleSquare, gameMode.LastInvalidMoveMessage);
 
             // Output human readable board positions to log so that we can verify the positions with our own eyes
-            TablutBoard tablutBoard = gameMode.GameBoard;
-            Debug.Log($"Updated pieces locations:{Environment.NewLine}{tablutBoard}");
+            Debug.Log($"Updated pieces locations:{Environment.NewLine}{gameMode}");
         }
 
         public static IEnumerable<(TablutPieceType, TablutPieceType, TablutPieceType,
@@ -530,12 +498,8 @@ namespace Junnav.KingOfTablut.Tests.PlayMode
             // Setup game mode
             TablutGameMode gameMode = new(customBoardPositions);
 
-            // Get the board positions
-            TablutBoard tablutBoard = gameMode.GameBoard;
-            TablutPieceType[,] boardPositions = tablutBoard.GetBoardPositions();
-
             // Output human readable board positions to log so that we can verify the positions with our own eyes
-            Debug.Log($"Initial pieces locations:{Environment.NewLine}{tablutBoard}");
+            Debug.Log($"Initial pieces locations:{Environment.NewLine}{gameMode}");
 
             // If capturer is not the attacker, then move attacker's piece for first move, otherwise defender can't move
             if (testData.capturerTwoPieceType != TablutPieceType.BlackPawn)
@@ -548,7 +512,7 @@ namespace Junnav.KingOfTablut.Tests.PlayMode
                 new Vector2Int(testData.capturerTwoMovePos.x, testData.capturerTwoMovePos.y));
 
             // Output human readable board positions to log so that we can verify the positions with our own eyes
-            Debug.Log($"Updated pieces locations:{Environment.NewLine}{tablutBoard}");
+            Debug.Log($"Updated pieces locations:{Environment.NewLine}{gameMode}");
 
             // Make sure the move is valid
             Assert.IsTrue(isValid);
@@ -556,7 +520,7 @@ namespace Junnav.KingOfTablut.Tests.PlayMode
             // If captive is not a King, check to make sure that the defender's pawn has been captured
             if (testData.captivePieceType != TablutPieceType.WhiteKing)
             {
-                Assert.AreEqual(TablutPieceType.Empty, boardPositions[testData.captivePos.x, testData.captivePos.y]);
+                Assert.AreEqual(TablutPieceType.Empty, gameMode.GetPiece(new Vector2Int(testData.captivePos.x, testData.captivePos.y)));
 
                 if (testData.capturerTwoPieceType == TablutPieceType.BlackPawn)
                 {
@@ -570,7 +534,7 @@ namespace Junnav.KingOfTablut.Tests.PlayMode
             // If it is a King, do not allow it to be destroyed
             else
             {
-                Assert.AreNotEqual(TablutPieceType.Empty, boardPositions[testData.captivePos.x, testData.captivePos.y]);
+                Assert.AreNotEqual(TablutPieceType.Empty, gameMode.GetPiece(new Vector2Int(testData.captivePos.x, testData.captivePos.y)));
                 Assert.AreEqual(MoveMessage.CapturedDefenderKing, gameMode.LastMoveMessage);
 
                 // If King has been captured, make sure that we can't continue the game
@@ -589,7 +553,7 @@ namespace Junnav.KingOfTablut.Tests.PlayMode
             }
 
             // Make sure the static position is not counted as capture
-            Assert.AreEqual(TablutPieceType.WhitePawn, boardPositions[2, 6]);
+            Assert.AreEqual(TablutPieceType.WhitePawn, gameMode.GetPiece(new Vector2Int(2, 6)));
         }
 
         public static IEnumerable<(TablutPieceType, TablutPieceType, Vector2Int, Vector2Int, Vector2Int)>
@@ -655,12 +619,8 @@ namespace Junnav.KingOfTablut.Tests.PlayMode
             // Setup game mode
             TablutGameMode gameMode = new(customBoardPositions);
 
-            // Get the board positions
-            TablutBoard tablutBoard = gameMode.GameBoard;
-            TablutPieceType[,] boardPositions = tablutBoard.GetBoardPositions();
-
             // Output human readable board positions to log so that we can verify the positions with our own eyes
-            Debug.Log($"Initial pieces locations:{Environment.NewLine}{tablutBoard}");
+            Debug.Log($"Initial pieces locations:{Environment.NewLine}{gameMode}");
 
             // If capturer is not the attacker, then move attacker's piece for first move, otherwise defender can't move
             if (testData.captorPieceType != TablutPieceType.BlackPawn)
@@ -673,15 +633,15 @@ namespace Junnav.KingOfTablut.Tests.PlayMode
                 new Vector2Int(testData.captorOneMovePos.x, testData.captorOneMovePos.y));
 
             // Output human readable board positions to log so that we can verify the positions with our own eyes
-            Debug.Log($"Updated pieces locations:{Environment.NewLine}{tablutBoard}");
+            Debug.Log($"Updated pieces locations:{Environment.NewLine}{gameMode}");
 
             // Check to make sure that the pawn has NOT been captured
             Assert.IsTrue(isValid, gameMode.LastInvalidMoveMessage.ToString());
-            Assert.AreEqual(testData.captivePieceType, boardPositions[testData.captivePos.x, testData.captivePos.y]);
+            Assert.AreEqual(testData.captivePieceType, gameMode.GetPiece(new Vector2Int(testData.captivePos.x, testData.captivePos.y)));
             Assert.AreEqual(MoveMessage.None, gameMode.LastMoveMessage);
 
             // Make sure the static position is not counted as capture
-            Assert.AreEqual(TablutPieceType.WhitePawn, boardPositions[2, 6]);
+            Assert.AreEqual(TablutPieceType.WhitePawn, gameMode.GetPiece(new Vector2Int(2, 6)));
         }
 
         public static IEnumerable<(TablutPieceType, TablutPieceType, Vector2Int, Vector2Int, Vector2Int)>
@@ -742,12 +702,8 @@ namespace Junnav.KingOfTablut.Tests.PlayMode
             // Setup game mode
             TablutGameMode gameMode = new(customBoardPositions);
 
-            // Get the board positions
-            TablutBoard tablutBoard = gameMode.GameBoard;
-            TablutPieceType[,] boardPositions = tablutBoard.GetBoardPositions();
-
             // Output human readable board positions to log so that we can verify the positions with our own eyes
-            Debug.Log($"Initial pieces locations:{Environment.NewLine}{tablutBoard}");
+            Debug.Log($"Initial pieces locations:{Environment.NewLine}{gameMode}");
 
             // If capturer is not the attacker, then move attacker's piece for first move, otherwise defender can't move
             if (testData.captorPieceType != TablutPieceType.BlackPawn)
@@ -760,7 +716,7 @@ namespace Junnav.KingOfTablut.Tests.PlayMode
                 new Vector2Int(testData.captorOneMovePos.x, testData.captorOneMovePos.y));
             
             // Output human readable board positions to log so that we can verify the positions with our own eyes
-            Debug.Log($"Updated pieces locations:{Environment.NewLine}{tablutBoard}");
+            Debug.Log($"Updated pieces locations:{Environment.NewLine}{gameMode}");
 
             // If captive is not a King, just check if the square is now empty
             if (testData.captivePieceType != TablutPieceType.WhiteKing)
@@ -768,7 +724,7 @@ namespace Junnav.KingOfTablut.Tests.PlayMode
                 // Check to make sure that the target pawn has been captured
                 Assert.IsTrue(isCapturingMoveValid, gameMode.LastInvalidMoveMessage.ToString());
 
-                Assert.AreEqual(TablutPieceType.Empty, boardPositions[testData.captivePos.x, testData.captivePos.y]);
+                Assert.AreEqual(TablutPieceType.Empty, gameMode.GetPiece(new Vector2Int(testData.captivePos.x, testData.captivePos.y)));
             }
             // If captive is a King, make sure the capture is invalid
             else
@@ -776,7 +732,7 @@ namespace Junnav.KingOfTablut.Tests.PlayMode
                 // Make sure that the move is still valid, even if we didn't capture the King
                 Assert.IsTrue(isCapturingMoveValid, gameMode.LastInvalidMoveMessage.ToString());
 
-                Assert.AreNotEqual(TablutPieceType.Empty, boardPositions[testData.captivePos.x, testData.captivePos.y]);
+                Assert.AreNotEqual(TablutPieceType.Empty, gameMode.GetPiece(new Vector2Int(testData.captivePos.x, testData.captivePos.y)));
                 Assert.AreNotEqual(MoveMessage.CapturedDefenderKing, gameMode.LastMoveMessage);
 
                 // Make sure that the game is still in playing state
@@ -817,12 +773,8 @@ namespace Junnav.KingOfTablut.Tests.PlayMode
             // Setup game mode
             TablutGameMode gameMode = new(customBoardPositions);
 
-            // Get the board positions
-            TablutBoard tablutBoard = gameMode.GameBoard;
-            TablutPieceType[,] boardPositions = tablutBoard.GetBoardPositions();
-
             // Output human readable board positions to log so that we can verify the positions with our own eyes
-            Debug.Log($"Initial pieces locations:{Environment.NewLine}{tablutBoard}");
+            Debug.Log($"Initial pieces locations:{Environment.NewLine}{gameMode}");
 
             // Output the game state
             Debug.Log($"Game state: {gameMode.GameState} - Last move message: {gameMode.LastMoveMessage}");
@@ -832,7 +784,7 @@ namespace Junnav.KingOfTablut.Tests.PlayMode
                 new Vector2Int(testData.captorOneTargetPos.x, testData.captorOneTargetPos.y));
 
             // Output human readable board positions to log so that we can verify the positions with our own eyes
-            Debug.Log($"Updated pieces locations:{Environment.NewLine}{tablutBoard}");
+            Debug.Log($"Updated pieces locations:{Environment.NewLine}{gameMode}");
 
             // Output the game state
             Debug.Log($"Game state: {gameMode.GameState} - Last move message: {gameMode.LastMoveMessage}");
@@ -879,12 +831,8 @@ namespace Junnav.KingOfTablut.Tests.PlayMode
             // Setup game mode
             TablutGameMode gameMode = new(customBoardPositions);
 
-            // Get the board positions
-            TablutBoard tablutBoard = gameMode.GameBoard;
-            TablutPieceType[,] boardPositions = tablutBoard.GetBoardPositions();
-
             // Output human readable board positions to log so that we can verify the positions with our own eyes
-            Debug.Log($"Initial pieces locations:{Environment.NewLine}{tablutBoard}");
+            Debug.Log($"Initial pieces locations:{Environment.NewLine}{gameMode}");
 
             // Output the game state
             Debug.Log($"Game state: {gameMode.GameState} - Last move message: {gameMode.LastMoveMessage}");
@@ -894,7 +842,7 @@ namespace Junnav.KingOfTablut.Tests.PlayMode
                 new Vector2Int(testData.captorOneTargetPos.x, testData.captorOneTargetPos.y));
 
             // Output human readable board positions to log so that we can verify the positions with our own eyes
-            Debug.Log($"Updated pieces locations:{Environment.NewLine}{tablutBoard}");
+            Debug.Log($"Updated pieces locations:{Environment.NewLine}{gameMode}");
 
             // Output the game state
             Debug.Log($"Game state: {gameMode.GameState} - Last move message: {gameMode.LastMoveMessage}");
@@ -939,12 +887,8 @@ namespace Junnav.KingOfTablut.Tests.PlayMode
             // Setup game mode
             TablutGameMode gameMode = new(customBoardPositions);
 
-            // Get the board positions
-            TablutBoard tablutBoard = gameMode.GameBoard;
-            TablutPieceType[,] boardPositions = tablutBoard.GetBoardPositions();
-
             // Output human readable board positions to log so that we can verify the positions with our own eyes
-            Debug.Log($"Initial pieces locations:{Environment.NewLine}{tablutBoard}");
+            Debug.Log($"Initial pieces locations:{Environment.NewLine}{gameMode}");
 
             // Output the game state
             Debug.Log($"Game state: {gameMode.GameState} - Last move message: {gameMode.LastMoveMessage}");
@@ -954,7 +898,7 @@ namespace Junnav.KingOfTablut.Tests.PlayMode
                 new Vector2Int(testData.captorOneTargetPos.x, testData.captorOneTargetPos.y));
 
             // Output human readable board positions to log so that we can verify the positions with our own eyes
-            Debug.Log($"Updated pieces locations:{Environment.NewLine}{tablutBoard}");
+            Debug.Log($"Updated pieces locations:{Environment.NewLine}{gameMode}");
 
             // Output the game state
             Debug.Log($"Game state: {gameMode.GameState} - Last move message: {gameMode.LastMoveMessage}");
@@ -1003,25 +947,21 @@ namespace Junnav.KingOfTablut.Tests.PlayMode
             // Setup game mode
             TablutGameMode gameMode = new(customBoardPositions);
 
-            // Get the board positions
-            TablutBoard tablutBoard = gameMode.GameBoard;
-            TablutPieceType[,] boardPositions = tablutBoard.GetBoardPositions();
-
             // Output human readable board positions to log so that we can verify the positions with our own eyes
-            Debug.Log($"Initial pieces locations:{Environment.NewLine}{tablutBoard}");
+            Debug.Log($"Initial pieces locations:{Environment.NewLine}{gameMode}");
 
             // Now make a move to capture the King
             bool isCapturingMoveValid = gameMode.MovePiece(new Vector2Int(testData.captorOneStartPos.x, testData.captorOneStartPos.y),
                 new Vector2Int(testData.captorOneTargetPos.x, testData.captorOneTargetPos.y));
 
             // Output human readable board positions to log so that we can verify the positions with our own eyes
-            Debug.Log($"Updated pieces locations:{Environment.NewLine}{tablutBoard}");
+            Debug.Log($"Updated pieces locations:{Environment.NewLine}{gameMode}");
 
             // Make sure the move is valid
             Assert.IsTrue(isCapturingMoveValid, gameMode.LastInvalidMoveMessage.ToString());
 
             // Check to make sure that the white pawn has been captured
-            Assert.AreEqual(TablutPieceType.Empty, boardPositions[testData.captivePos.x, testData.captivePos.y]);
+            Assert.AreEqual(TablutPieceType.Empty, gameMode.GetPiece(new Vector2Int(testData.captivePos.x, testData.captivePos.y)));
         }
 
         public static IEnumerable<(Vector2Int, Vector2Int, Vector2Int, Vector2Int, Vector2Int, Vector2Int)>
@@ -1060,25 +1000,21 @@ namespace Junnav.KingOfTablut.Tests.PlayMode
             // Setup game mode
             TablutGameMode gameMode = new(customBoardPositions);
 
-            // Get the board positions
-            TablutBoard tablutBoard = gameMode.GameBoard;
-            TablutPieceType[,] boardPositions = tablutBoard.GetBoardPositions();
-
             // Output human readable board positions to log so that we can verify the positions with our own eyes
-            Debug.Log($"Initial pieces locations:{Environment.NewLine}{tablutBoard}");
+            Debug.Log($"Initial pieces locations:{Environment.NewLine}{gameMode}");
 
             // Now make a move to capture the King
             bool isCapturingMoveValid = gameMode.MovePiece(new Vector2Int(testData.captorOneStartPos.x, testData.captorOneStartPos.y),
                 new Vector2Int(testData.captorOneTargetPos.x, testData.captorOneTargetPos.y));
 
             // Output human readable board positions to log so that we can verify the positions with our own eyes
-            Debug.Log($"Updated pieces locations:{Environment.NewLine}{tablutBoard}");
+            Debug.Log($"Updated pieces locations:{Environment.NewLine}{gameMode}");
 
             // Make sure the move is valid
             Assert.IsTrue(isCapturingMoveValid, gameMode.LastInvalidMoveMessage.ToString());
 
             // Make sure that nothing happens
-            Assert.AreEqual(TablutPieceType.BlackPawn, boardPositions[testData.targetCaptorPos.x, testData.targetCaptorPos.y]);
+            Assert.AreEqual(TablutPieceType.BlackPawn, gameMode.GetPiece(new Vector2Int(testData.targetCaptorPos.x, testData.targetCaptorPos.y)));
         }
 
         public static IEnumerable<(Vector2Int, Vector2Int)> KingMoveToWinTestCases()
@@ -1105,12 +1041,8 @@ namespace Junnav.KingOfTablut.Tests.PlayMode
             // Setup game mode
             TablutGameMode gameMode = new(customBoardPositions);
 
-            // Get the board positions
-            TablutBoard tablutBoard = gameMode.GameBoard;
-            TablutPieceType[,] boardPositions = tablutBoard.GetBoardPositions();
-
             // Output human readable board positions to log so that we can verify the positions with our own eyes
-            Debug.Log($"Initial pieces locations:{Environment.NewLine}{tablutBoard}");
+            Debug.Log($"Initial pieces locations:{Environment.NewLine}{gameMode}");
 
             // Output the game state
             Debug.Log($"Game state: {gameMode.GameState} - Last move message: {gameMode.LastMoveMessage}");
@@ -1125,7 +1057,7 @@ namespace Junnav.KingOfTablut.Tests.PlayMode
             bool isMoveValid = gameMode.MovePiece(testData.kingStartingPos, testData.kingTargetPos);
 
             // Output human readable board positions to log so that we can verify the positions with our own eyes
-            Debug.Log($"Updated pieces locations:{Environment.NewLine}{tablutBoard}");
+            Debug.Log($"Updated pieces locations:{Environment.NewLine}{gameMode}");
 
             // Output the game state
             Debug.Log($"Game state: {gameMode.GameState} - Last move message: {gameMode.LastMoveMessage}");
@@ -1158,11 +1090,8 @@ namespace Junnav.KingOfTablut.Tests.PlayMode
             // Setup game mode
             TablutGameMode gameMode = new(customBoardPositions);
 
-            // Get the board positions
-            TablutBoard tablutBoard = gameMode.GameBoard;
-
             // Output human readable board positions to log so that we can verify the positions with our own eyes
-            Debug.Log($"Initial pieces locations:{Environment.NewLine}{tablutBoard}");
+            Debug.Log($"Initial pieces locations:{Environment.NewLine}{gameMode}");
 
             // Attacker capture defender's pawn
             gameMode.MovePiece(new Vector2Int(7, 6), new Vector2Int(7, 5));
@@ -1170,7 +1099,7 @@ namespace Junnav.KingOfTablut.Tests.PlayMode
             gameMode.MovePiece(new Vector2Int(1, 1), new Vector2Int(2, 1));
 
             // Output human readable board positions to log so that we can verify the positions with our own eyes
-            Debug.Log($"Updated pieces locations:{Environment.NewLine}{tablutBoard}");
+            Debug.Log($"Updated pieces locations:{Environment.NewLine}{gameMode}");
 
             // Check that the move message has been reset
             Assert.AreEqual(MoveMessage.None, gameMode.LastMoveMessage);
@@ -1199,7 +1128,7 @@ namespace Junnav.KingOfTablut.Tests.PlayMode
 
             Assert.IsTrue(gameMode.MovePiece(new Vector2Int(1, 0), new Vector2Int(1, 1)));
             Assert.AreEqual(MoveMessage.None, gameMode.LastMoveMessage);
-            Assert.AreEqual(TablutPieceType.BlackPawn, gameMode.GameBoard.GetBoardPositions()[1, 1]);
+            Assert.AreEqual(TablutPieceType.BlackPawn, gameMode.GetPiece(new Vector2Int(1, 1)));
         }
 
         [Test]
@@ -1218,8 +1147,8 @@ namespace Junnav.KingOfTablut.Tests.PlayMode
             Assert.IsTrue(gameMode.MovePiece(new Vector2Int(4, 1), new Vector2Int(4, 3)));
             Assert.AreEqual(MoveMessage.CapturedDefenderKing, gameMode.LastMoveMessage);
             Assert.AreEqual(GameState.BlackWon, gameMode.GameState);
-            Assert.AreEqual(TablutPieceType.WhiteKing, gameMode.GameBoard.GetBoardPositions()[4, 4]);
-            Assert.AreEqual(TablutPieceType.Empty, gameMode.GameBoard.GetBoardPositions()[5, 3]);
+            Assert.AreEqual(TablutPieceType.WhiteKing, gameMode.GetPiece(new Vector2Int(4, 4)));
+            Assert.AreEqual(TablutPieceType.Empty, gameMode.GetPiece(new Vector2Int(5, 3)));
         }
 
         [Test]
@@ -1228,7 +1157,19 @@ namespace Junnav.KingOfTablut.Tests.PlayMode
             TablutPieceType[,] positions = new TablutPieceType[8, 8];
 
             Assert.Throws<ArgumentException>(() => new TablutGameMode(positions));
-            Assert.AreEqual(TablutPieceType.WhiteKing, new TablutGameMode().GameBoard.GetBoardPositions()[4, 4]);
+            Assert.AreEqual(TablutPieceType.WhiteKing, new TablutGameMode().GetPiece(new Vector2Int(4, 4)));
+        }
+
+        [Test]
+        public void ChangesToSetupDoNotAffectMatch()
+        {
+            TablutPieceType[,] positions = new TablutPieceType[9, 9];
+            positions[4, 4] = TablutPieceType.WhiteKing;
+            TablutGameMode gameMode = new(positions);
+
+            positions[4, 4] = TablutPieceType.Empty;
+
+            Assert.AreEqual(TablutPieceType.WhiteKing, gameMode.GetPiece(new Vector2Int(4, 4)));
         }
 
     }
