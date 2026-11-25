@@ -1,37 +1,26 @@
-# King of Tablut — Technical Showcase
+# King of Tablut
 
-King of Tablut is an independent strategy game project based on Tablut, a traditional Norse board game commonly associated with Viking chess.
+King of Tablut is a local two-player strategy game built in Unity. The attackers try to capture the king. The defenders try to get the king to any edge of the board.
 
-The project is being developed with an emphasis on maintainable gameplay systems, correctness and test-driven development.
+[Download for Windows](https://github.com/Nichii/King-of-Tablut-Showcase/releases/latest/download/King-of-Tablut-Windows.zip) · [Watch gameplay](https://github.com/Nichii/King-of-Tablut-Showcase/releases/latest/download/King-of-Tablut-Gameplay.mp4) · [Read the rules code](Assets/Junnav/King%20Of%20Tablut/Code/Scripts/Gameplay/TablutGameMode.cs)
 
-This repository contains selected source code, automated tests and technical documentation from the project. The complete game remains under private development.
+![A selected attacker and its legal destinations on the Tablut board](Docs/Gameplay.jpg)
 
-## Engineering Highlights
+## Play
 
-- C# and Unity game development
-- Test-driven gameplay development
-- Automated testing of gameplay rules and edge cases
-- Gameplay system architecture
-- Maintainability and regression prevention
+Extract the Windows ZIP and run `King of Tablut.exe`. Click one of your pieces to see where it can move, then click a marked square. Use **Restart** to return to the starting position.
 
-## Technical Architecture
+To run from source, open the project in Unity **6000.3.24f1**, open `TablutGameplayScene`, and enter Play Mode.
 
-Documentation covering the gameplay architecture, system responsibilities and key engineering decisions.
+## Gameplay code and tests
 
-## Testing Strategy
+`TablutGameMode` owns the board, turns, and win conditions. The Unity scene reads its board state after a move. Move highlights use the same validation as move execution, so the view only offers squares the rules accept.
 
-Selected automated tests demonstrating gameplay correctness, validation of edge cases and regression testing.
+One regression came from the throne at `(4,4)`. Moving from `(2,1)` to `(6,1)` was rejected because the path crossed column 4. The [fix checks the full square](https://github.com/Nichii/King-of-Tablut-Showcase/commit/592ccfe) and tests valid moves across both axes, alongside the test that blocks a move through the throne itself.
 
-## Gameplay Showcase
+In Unity, open **Window → General → Test Runner**, select **PlayMode**, and choose **Run All**. The suite covers moves, captures, both victory outcomes, and an opening move and restart through the gameplay scene.
 
-Screenshots and gameplay demonstrations showcasing the current state of development.
+## Project scope
 
-## Project Status
+This repository is a playable slice of an independent project. The full commercial project remains under private development. Source and assets here are provided for portfolio review and technical evaluation. All rights reserved, subject to applicable third-party licences.
 
-King of Tablut is an ongoing independent game project intended for future development into a complete product.
-
-## Copyright
-
-The source code and documentation are provided for portfolio demonstration and technical evaluation. The complete commercial game, assets and undisclosed implementation remain proprietary.
-
-All rights reserved, subject to applicable third-party licences and GitHub's Terms of Service.
