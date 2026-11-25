@@ -236,13 +236,12 @@ namespace Junnav.KingOfTablut.Gameplay
                     // Otherwise, its the pawn that has been captured
                     else
                     {
-                        if (currentPlayer == (int)TablutPlayer.Attacker)
+                        // A pawn captured on the same move must not replace the winning capture.
+                        if (LastMoveMessage != MoveMessage.CapturedDefenderKing)
                         {
-                            LastMoveMessage = MoveMessage.CapturedDefenderPawn;
-                        }
-                        else
-                        {
-                            LastMoveMessage = MoveMessage.CapturedAttackerPawn;
+                            LastMoveMessage = currentPlayer == (int)TablutPlayer.Attacker
+                                ? MoveMessage.CapturedDefenderPawn
+                                : MoveMessage.CapturedAttackerPawn;
                         }
 
                         // Destroy the pawn at that position too

@@ -1202,5 +1202,25 @@ namespace Junnav.KingOfTablut.Tests.PlayMode
             Assert.AreEqual(TablutPieceType.BlackPawn, gameMode.GameBoard.GetBoardPositions()[1, 1]);
         }
 
+        [Test]
+        public void KingCaptureTakesPrecedenceOverPawnCapture()
+        {
+            TablutPieceType[,] positions = new TablutPieceType[9, 9];
+            positions[4, 4] = TablutPieceType.WhiteKing;
+            positions[4, 1] = TablutPieceType.BlackPawn;
+            positions[3, 4] = TablutPieceType.BlackPawn;
+            positions[5, 4] = TablutPieceType.BlackPawn;
+            positions[4, 5] = TablutPieceType.BlackPawn;
+            positions[5, 3] = TablutPieceType.WhitePawn;
+            positions[6, 3] = TablutPieceType.BlackPawn;
+            TablutGameMode gameMode = new(positions);
+
+            Assert.IsTrue(gameMode.MovePiece(new Vector2Int(4, 1), new Vector2Int(4, 3)));
+            Assert.AreEqual(MoveMessage.CapturedDefenderKing, gameMode.LastMoveMessage);
+            Assert.AreEqual(GameState.BlackWon, gameMode.GameState);
+            Assert.AreEqual(TablutPieceType.WhiteKing, gameMode.GameBoard.GetBoardPositions()[4, 4]);
+            Assert.AreEqual(TablutPieceType.Empty, gameMode.GameBoard.GetBoardPositions()[5, 3]);
+        }
+
     }
 }
