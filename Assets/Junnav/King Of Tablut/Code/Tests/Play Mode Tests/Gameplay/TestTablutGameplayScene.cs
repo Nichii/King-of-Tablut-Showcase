@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.TestTools;
+using UnityEngine.UI;
 
 namespace Junnav.KingOfTablut.Tests.PlayMode
 {
@@ -33,7 +34,18 @@ namespace Junnav.KingOfTablut.Tests.PlayMode
             Assert.AreEqual(0, GetPiecesAt(piecePositions, from).Length);
             Assert.AreEqual(1, GetPiecesAt(piecePositions, to).Length);
 
-            Object.FindFirstObjectByType<TablutMatchController>().RestartMatch();
+            Button restartButton = Object.FindFirstObjectByType<Button>();
+            Assert.IsNotNull(restartButton);
+            Canvas.ForceUpdateCanvases();
+            Vector2 restartPoint = RectTransformUtility.WorldToScreenPoint(null, restartButton.transform.position);
+            PointerEventData pointer = new(EventSystem.current) { position = restartPoint };
+            System.Collections.Generic.List<RaycastResult> hits = new();
+            EventSystem.current.RaycastAll(pointer, hits);
+            Assert.IsNotEmpty(hits);
+            Assert.AreSame(restartButton.gameObject, hits[0].gameObject);
+
+            pointer.pointerCurrentRaycast = hits[0];
+            ExecuteEvents.Execute(restartButton.gameObject, pointer, ExecuteEvents.pointerClickHandler);
             yield return null;
 
             Assert.AreEqual(1, GetPiecesAt(piecePositions, from).Length);
