@@ -1,14 +1,14 @@
 using Junnav.KingOfTablut.Gameplay;
+using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace Junnav.KingOfTablut
 {
     public class TablutMatchController : MonoBehaviour
     {
         [SerializeField] private TablutBoardView boardView;
-        [SerializeField] private Text turnText;
-        [SerializeField] private Text moveText;
+        [SerializeField] private TMP_Text turnText;
+        [SerializeField] private TMP_Text moveText;
 
         private TablutGameMode gameMode;
         private Vector2Int? selectedSquare;
