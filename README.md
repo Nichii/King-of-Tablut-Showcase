@@ -2,7 +2,7 @@
 
 King of Tablut is a local two-player strategy game built in Unity. The attackers try to capture the king. The defenders try to get the king to any edge of the board.
 
-[Download for Windows](https://github.com/Nichii/King-of-Tablut-Showcase/releases/latest/download/King-of-Tablut-Windows.zip) · [Watch gameplay](https://github.com/Nichii/King-of-Tablut-Showcase/releases/latest/download/King-of-Tablut-Gameplay.mp4) · [Read the rules code](Assets/Junnav/King%20Of%20Tablut/Code/Scripts/Gameplay/TablutGameMode.cs)
+[Play WebGL Demo](https://nikorasuchan.itch.io/king-of-tablut-demo) · [Download for Windows](https://github.com/Nichii/King-of-Tablut-Showcase/releases/latest/download/King-of-Tablut-Windows.zip) · [Watch gameplay](https://github.com/Nichii/King-of-Tablut-Showcase/releases/latest/download/King-of-Tablut-Gameplay.mp4) · [Read the rules code](Assets/Junnav/King%20Of%20Tablut/Code/Scripts/Gameplay/TablutGameMode.cs)
 
 ![A selected attacker and its legal destinations on the Tablut board](Docs/Gameplay.jpg)
 
@@ -23,4 +23,3 @@ In Unity, open **Window → General → Test Runner**, select **PlayMode**, and 
 ## Project scope
 
 This repository is a playable slice of an independent project. The full commercial project remains under private development. Source and assets here are provided for portfolio review and technical evaluation. All rights reserved, subject to applicable third-party licences.
-
