@@ -12,6 +12,8 @@ Extract the Windows ZIP and run `King of Tablut.exe`. Click one of your pieces t
 
 To run from source, open the project in Unity **6000.3.24f1**, open `TablutGameplayScene`, and enter Play Mode.
 
+See the [Tablut rules](Docs/Rules.md) for movement, captures, and how a match ends.
+
 ## Gameplay code and tests
 
 `TablutGameMode` owns the board, turns, and win conditions. The Unity scene reads its board state after a move. Move highlights use the same validation as move execution, so the view only offers squares the rules accept.
