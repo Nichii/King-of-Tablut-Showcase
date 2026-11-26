@@ -14,6 +14,17 @@ To run from source, open the project in Unity **6000.3.24f1**, open `TablutGamep
 
 See the [Tablut rules](Docs/Rules.md) for movement, captures, and how a match ends.
 
+## Build from source
+
+Open the project in Unity **6000.3.24f1**. Install **Web Build Support** for that editor version through Unity Hub if you want a browser build.
+
+Open **File -> Build Profiles**, make the target platform active, and confirm that `TablutGameplayScene` is enabled in the Scene List.
+
+- **Windows.** Select **Windows** and **Intel 64-bit**, then choose **Build** and save to `Builds/Windows`. Run the generated executable with the rest of the build files in the same folder.
+- **Web.** Select **Web**, then choose **Build and Run** and save to `Builds/Web`. Unity serves the build locally and opens it in your browser. The first Web build can take several minutes.
+
+To check either build, make an opening move and click **Restart**. The opening position should return with the attackers to move.
+
 ## Gameplay code and tests
 
 `TablutGameMode` owns the board, turns, and win conditions. The Unity scene reads its board state after a move. Move highlights use the same validation as move execution, so the view only offers squares the rules accept.
