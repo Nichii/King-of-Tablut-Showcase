@@ -18,17 +18,20 @@ namespace Junnav.KingOfTablut.Tests.PlayMode
 
             TablutBoardView boardView = Object.FindFirstObjectByType<TablutBoardView>();
             SetupPiecePositions piecePositions = boardView.GetComponent<SetupPiecePositions>();
+            Camera camera = Camera.main;
+            Assert.IsNotNull(camera);
+
             Vector2Int from = new(0, 3);
             Vector2Int to = new(0, 2);
             Assert.AreEqual(1, GetPiecesAt(piecePositions, from).Length);
             Assert.AreEqual(0, GetPiecesAt(piecePositions, to).Length);
 
-            ClickSquare(boardView, piecePositions, from);
-            ClickSquare(boardView, piecePositions, new Vector2Int(1, 2));
+            ClickSquare(boardView, piecePositions, camera, from);
+            ClickSquare(boardView, piecePositions, camera, new Vector2Int(1, 2));
             Assert.AreEqual(1, GetPiecesAt(piecePositions, from).Length);
             Assert.AreEqual(0, GetPiecesAt(piecePositions, to).Length);
 
-            ClickSquare(boardView, piecePositions, to);
+            ClickSquare(boardView, piecePositions, camera, to);
             yield return null;
 
             Assert.AreEqual(0, GetPiecesAt(piecePositions, from).Length);
@@ -38,14 +41,7 @@ namespace Junnav.KingOfTablut.Tests.PlayMode
             Assert.IsNotNull(restartButton);
             Canvas.ForceUpdateCanvases();
             Vector2 restartPoint = RectTransformUtility.WorldToScreenPoint(null, restartButton.transform.position);
-            PointerEventData pointer = new(EventSystem.current) { position = restartPoint };
-            System.Collections.Generic.List<RaycastResult> hits = new();
-            EventSystem.current.RaycastAll(pointer, hits);
-            Assert.IsNotEmpty(hits);
-            Assert.AreSame(restartButton.gameObject, hits[0].gameObject);
-
-            pointer.pointerCurrentRaycast = hits[0];
-            ExecuteEvents.Execute(restartButton.gameObject, pointer, ExecuteEvents.pointerClickHandler);
+            ClickAt(restartPoint, restartButton.gameObject);
             yield return null;
 
             Assert.AreEqual(1, GetPiecesAt(piecePositions, from).Length);
@@ -68,14 +64,28 @@ namespace Junnav.KingOfTablut.Tests.PlayMode
             return pieces.ToArray();
         }
 
-        private static void ClickSquare(TablutBoardView boardView, SetupPiecePositions piecePositions, Vector2Int square)
+        private static void ClickSquare(TablutBoardView boardView, SetupPiecePositions piecePositions, Camera camera, Vector2Int square)
         {
             Vector3 worldPosition = piecePositions.transform.TransformPoint(piecePositions.GetLocalPosition(square));
-            PointerEventData click = new(EventSystem.current)
-            {
-                pointerCurrentRaycast = new RaycastResult { worldPosition = worldPosition }
-            };
-            ExecuteEvents.Execute(boardView.gameObject, click, ExecuteEvents.pointerClickHandler);
+            Vector3 screenPosition = camera.WorldToScreenPoint(worldPosition);
+            Assert.Greater(screenPosition.z, 0f, $"Square {square} is behind the camera.");
+
+            ClickAt(screenPosition, boardView.gameObject);
+        }
+
+        private static void ClickAt(Vector2 screenPosition, GameObject expectedTarget)
+        {
+            EventSystem eventSystem = EventSystem.current;
+            PointerEventData pointer = new(eventSystem) { position = screenPosition };
+            System.Collections.Generic.List<RaycastResult> hits = new();
+
+            // Use the first hit so an overlapping UI element can block the board click.
+            eventSystem.RaycastAll(pointer, hits);
+            Assert.IsNotEmpty(hits, $"No object was hit at {screenPosition}.");
+            Assert.AreSame(expectedTarget, hits[0].gameObject);
+
+            pointer.pointerCurrentRaycast = hits[0];
+            Assert.IsTrue(ExecuteEvents.Execute(hits[0].gameObject, pointer, ExecuteEvents.pointerClickHandler));
         }
     }
 }
