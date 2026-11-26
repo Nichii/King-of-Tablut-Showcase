@@ -22,16 +22,50 @@ namespace Junnav.KingOfTablut.Gameplay
 
         private readonly PlayerTurnState currentPlayerTurn = new();
 
+        /// <summary>
+        /// Starts a match with the standard layout or a copy of the supplied positions.
+        /// </summary>
+        /// <exception cref="ArgumentException">
+        /// The custom layout has the wrong dimensions, an unknown piece type, or a king count other than one.
+        /// </exception>
         public TablutGameMode(TablutPieceType[,] customBoardPositions = null)
         {
             if (customBoardPositions == null)
             {
-                // Call setup class to setup standard tablut board starting positions
                 StandardTablutSetup.SetupStandardPositions(gameBoard);
+                return;
             }
-            else if (!gameBoard.SetBoardPositions(customBoardPositions))
+
+            if (!gameBoard.SetBoardPositions(customBoardPositions))
             {
                 throw new ArgumentException("Custom positions must match the board dimensions.", nameof(customBoardPositions));
+            }
+
+            // Validate the match's copy so the checked layout is the one used for play.
+            int kingCount = 0;
+            for (int x = 0; x < TablutBoard.TotalHorizontalSquares; x++)
+            {
+                for (int y = 0; y < TablutBoard.TotalVerticalSquares; y++)
+                {
+                    TablutPieceType pieceType = gameBoard.GetPiece(new Vector2Int(x, y));
+                    switch (pieceType)
+                    {
+                        case TablutPieceType.WhiteKing:
+                            kingCount++;
+                            break;
+                        case TablutPieceType.Empty:
+                        case TablutPieceType.WhitePawn:
+                        case TablutPieceType.BlackPawn:
+                            break;
+                        default:
+                            throw new ArgumentException("Custom positions contain an unknown piece type.", nameof(customBoardPositions));
+                    }
+                }
+            }
+
+            if (kingCount != 1)
+            {
+                throw new ArgumentException("Custom positions must contain exactly one king.", nameof(customBoardPositions));
             }
         }
 

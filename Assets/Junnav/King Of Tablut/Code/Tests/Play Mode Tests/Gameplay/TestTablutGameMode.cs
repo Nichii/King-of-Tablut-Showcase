@@ -1160,6 +1160,29 @@ namespace Junnav.KingOfTablut.Tests.PlayMode
             Assert.AreEqual(TablutPieceType.WhiteKing, new TablutGameMode().GetPiece(new Vector2Int(4, 4)));
         }
 
+        [TestCase(0)]
+        [TestCase(2)]
+        public void RejectsCustomBoardWithWrongNumberOfKings(int kingCount)
+        {
+            TablutPieceType[,] positions = new TablutPieceType[9, 9];
+            for (int i = 0; i < kingCount; i++)
+            {
+                positions[4 + i, 4] = TablutPieceType.WhiteKing;
+            }
+
+            Assert.Throws<ArgumentException>(() => new TablutGameMode(positions));
+        }
+
+        [Test]
+        public void RejectsCustomBoardWithUnknownPieceType()
+        {
+            TablutPieceType[,] positions = new TablutPieceType[9, 9];
+            positions[4, 4] = TablutPieceType.WhiteKing;
+            positions[1, 1] = (TablutPieceType)99;
+
+            Assert.Throws<ArgumentException>(() => new TablutGameMode(positions));
+        }
+
         [Test]
         public void ChangesToSetupDoNotAffectMatch()
         {
