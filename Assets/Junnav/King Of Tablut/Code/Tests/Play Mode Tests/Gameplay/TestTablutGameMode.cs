@@ -1219,5 +1219,122 @@ namespace Junnav.KingOfTablut.Tests.PlayMode
             Assert.AreEqual(MoveMessage.None, gameMode.LastMoveMessage);
         }
 
+        [TestCase(2, 1)]
+        [TestCase(6, -1)]
+        public void LegalDestinationsStopAtPiecesAndCastleOnEitherSideOfBoard(int column, int towardsCastle)
+        {
+            TablutPieceType[,] positions = new TablutPieceType[9, 9];
+            positions[column, 4] = TablutPieceType.BlackPawn;
+            positions[column, 6] = TablutPieceType.WhitePawn;
+            positions[4, 2] = TablutPieceType.WhiteKing;
+
+            AssertLegalDestinationsMatchMoves(positions, new Vector2Int(column, 4),
+                new Vector2Int(column + towardsCastle, 4),
+                new Vector2Int(column - towardsCastle, 4),
+                new Vector2Int(column - 2 * towardsCastle, 4),
+                new Vector2Int(column, 5),
+                new Vector2Int(column, 3),
+                new Vector2Int(column, 2),
+                new Vector2Int(column, 1),
+                new Vector2Int(column, 0));
+        }
+
+        [Test]
+        public void LegalDestinationsAtCornerStayInsideTheBoard()
+        {
+            TablutPieceType[,] positions = new TablutPieceType[9, 9];
+            positions[0, 0] = TablutPieceType.BlackPawn;
+            positions[2, 0] = TablutPieceType.WhitePawn;
+            positions[0, 2] = TablutPieceType.WhitePawn;
+            positions[4, 4] = TablutPieceType.WhiteKing;
+
+            AssertLegalDestinationsMatchMoves(positions, new Vector2Int(0, 0),
+                new Vector2Int(1, 0), new Vector2Int(0, 1));
+        }
+
+        [TestCase(4, 2, -1, 2, InvalidMoveMessage.OutOfBound)]
+        [TestCase(0, 2, 0, 1, InvalidMoveMessage.WrongPlayerTurn)]
+        [TestCase(4, 2, 5, 3, InvalidMoveMessage.OnlyOrthogonalMovementAllowed)]
+        [TestCase(4, 2, 2, 2, InvalidMoveMessage.OccupiedSpace)]
+        [TestCase(4, 2, 1, 2, InvalidMoveMessage.CannotJumpOverPieces)]
+        [TestCase(4, 2, 4, 4, InvalidMoveMessage.CannotMoveIntoCastleSquare)]
+        [TestCase(8, 8, 8, 7, InvalidMoveMessage.CannotMoveEmptySpace)]
+        public void RejectedMovesDoNotChangeMatchState(int fromX, int fromY, int toX, int toY, InvalidMoveMessage reason)
+        {
+            TablutPieceType[,] positions = new TablutPieceType[9, 9];
+            positions[0, 3] = TablutPieceType.BlackPawn;
+            positions[2, 2] = TablutPieceType.WhitePawn;
+            positions[4, 2] = TablutPieceType.WhiteKing;
+            TablutGameMode gameMode = new(positions);
+
+            Assert.IsTrue(gameMode.MovePiece(new Vector2Int(0, 3), new Vector2Int(0, 2)));
+
+            AssertRejectedMoveLeavesMatchUnchanged(gameMode, new Vector2Int(fromX, fromY), new Vector2Int(toX, toY), reason);
+        }
+
+        [Test]
+        public void RejectedMovesDoNotChangeFinishedMatch()
+        {
+            TablutPieceType[,] positions = new TablutPieceType[9, 9];
+            positions[0, 3] = TablutPieceType.BlackPawn;
+            positions[1, 1] = TablutPieceType.WhiteKing;
+            TablutGameMode gameMode = new(positions);
+
+            Assert.IsTrue(gameMode.MovePiece(new Vector2Int(0, 3), new Vector2Int(0, 2)));
+            Assert.IsTrue(gameMode.MovePiece(new Vector2Int(1, 1), new Vector2Int(1, 0)));
+            Assert.AreEqual(GameState.WhiteWon, gameMode.GameState);
+
+            AssertRejectedMoveLeavesMatchUnchanged(gameMode, new Vector2Int(0, 2), new Vector2Int(0, 1), InvalidMoveMessage.GameEnded);
+        }
+
+        private static void AssertLegalDestinationsMatchMoves(TablutPieceType[,] positions, Vector2Int from,
+            params Vector2Int[] expectedDestinations)
+        {
+            TablutGameMode gameMode = new(positions);
+            IReadOnlyList<Vector2Int> destinations = gameMode.GetLegalDestinations(from);
+            CollectionAssert.AreEquivalent(expectedDestinations, destinations);
+
+            // Each attempt starts from the same board and turn.
+            for (int x = 0; x < TablutBoard.TotalHorizontalSquares; x++)
+            {
+                for (int y = 0; y < TablutBoard.TotalVerticalSquares; y++)
+                {
+                    Vector2Int to = new(x, y);
+                    TablutGameMode attempt = new(positions);
+
+                    Assert.AreEqual(Array.IndexOf(expectedDestinations, to) >= 0, attempt.MovePiece(from, to),
+                        $"Move from {from} to {to} disagrees with the legal destinations.");
+                }
+            }
+        }
+
+        private static void AssertRejectedMoveLeavesMatchUnchanged(TablutGameMode gameMode, Vector2Int from, Vector2Int to,
+            InvalidMoveMessage reason)
+        {
+            TablutPieceType[,] boardBeforeMove = ReadBoard(gameMode);
+            TablutPlayer playerBeforeMove = gameMode.CurrentPlayer;
+            GameState stateBeforeMove = gameMode.GameState;
+
+            Assert.IsFalse(gameMode.MovePiece(from, to));
+            Assert.AreEqual(reason, gameMode.LastInvalidMoveMessage);
+            CollectionAssert.AreEqual(boardBeforeMove, ReadBoard(gameMode));
+            Assert.AreEqual(playerBeforeMove, gameMode.CurrentPlayer);
+            Assert.AreEqual(stateBeforeMove, gameMode.GameState);
+        }
+
+        private static TablutPieceType[,] ReadBoard(TablutGameMode gameMode)
+        {
+            TablutPieceType[,] positions = new TablutPieceType[TablutBoard.TotalHorizontalSquares, TablutBoard.TotalVerticalSquares];
+            for (int x = 0; x < positions.GetLength(0); x++)
+            {
+                for (int y = 0; y < positions.GetLength(1); y++)
+                {
+                    positions[x, y] = gameMode.GetPiece(new Vector2Int(x, y));
+                }
+            }
+
+            return positions;
+        }
+
     }
 }
