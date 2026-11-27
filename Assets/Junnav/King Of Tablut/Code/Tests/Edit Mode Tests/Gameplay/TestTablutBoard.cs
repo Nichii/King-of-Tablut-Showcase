@@ -2,7 +2,7 @@ using System;
 using Junnav.KingOfTablut.Gameplay;
 using NUnit.Framework;
 
-namespace Junnav.KingOfTablut.Tests.PlayMode
+namespace Junnav.KingOfTablut.Tests.EditMode
 {
     public class TestTablutBoard
     {

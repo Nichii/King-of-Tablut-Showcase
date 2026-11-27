@@ -3,7 +3,7 @@
         <TargetFramework>net10.0</TargetFramework>
         <LangVersion>9.0</LangVersion>
         <IsPackable>false</IsPackable>
-        <GameplayTests>../../Assets/Junnav/King Of Tablut/Code/Tests/Play Mode Tests/Gameplay</GameplayTests>
+        <GameplayTests>../../Assets/Junnav/King Of Tablut/Code/Tests/Edit Mode Tests/Gameplay</GameplayTests>
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.0.1" />

@@ -31,7 +31,7 @@ To check either build, make an opening move and click **Restart**. The opening p
 
 One regression came from the throne at `(4,4)`. Moving from `(2,1)` to `(6,1)` was rejected because the path crossed column 4. The [fix checks the full square](https://github.com/Nichii/King-of-Tablut-Showcase/commit/592ccfe) and tests valid moves across both axes, alongside the test that blocks a move through the throne itself.
 
-In Unity, open **Window → General → Test Runner**, select **PlayMode**, and choose **Run All**. The suite covers moves, captures, both victory outcomes, and an opening move and restart through the gameplay scene.
+In Unity, open **Window → General → Test Runner**. In **EditMode**, choose **Run All** for the board, turn, and match rules. In **PlayMode**, choose **Run All** for the gameplay scene test, which checks an opening move and restart.
 
 ### Run the rules tests without Unity
 
