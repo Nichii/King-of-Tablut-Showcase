@@ -2,28 +2,23 @@
 {
     public class PlayerTurnState
     {
-        private const int MaxPlayerCounts = 2;
+        private TablutPlayer _currentPlayerTurn = TablutPlayer.Attacker;
 
-        private int _currentPlayerTurn = 0;
-
-        public bool CanPlayerMove(int player)
+        public bool CanPlayerMove(TablutPlayer player)
         {
             return _currentPlayerTurn == player;
         }
 
-        public int GetCurrentPlayerTurn()
+        public TablutPlayer GetCurrentPlayerTurn()
         {
             return _currentPlayerTurn;
         }
 
         public void GoToNextPlayer()
         {
-            _currentPlayerTurn++;
-
-            if (_currentPlayerTurn > MaxPlayerCounts - 1)
-            {
-                _currentPlayerTurn = 0;
-            }
+            _currentPlayerTurn = _currentPlayerTurn == TablutPlayer.Attacker
+                ? TablutPlayer.Defender
+                : TablutPlayer.Attacker;
         }
     }
 }

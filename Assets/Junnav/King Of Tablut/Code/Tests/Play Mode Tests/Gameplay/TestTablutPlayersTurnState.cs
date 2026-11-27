@@ -17,7 +17,7 @@ namespace Junnav.KingOfTablut.Tests.PlayMode
             PlayerTurnState playerTurnState = new();
 
             // Check to make sure attacker starts their turn first
-            Assert.IsTrue(playerTurnState.GetCurrentPlayerTurn() == (int)TablutPlayer.Attacker);
+            Assert.AreEqual(TablutPlayer.Attacker, playerTurnState.GetCurrentPlayerTurn());
         }
 
         [Test]
@@ -30,7 +30,7 @@ namespace Junnav.KingOfTablut.Tests.PlayMode
             playerTurnState.GoToNextPlayer();
 
             // Check to make sure it's currently defender's turn
-            Assert.IsTrue(playerTurnState.GetCurrentPlayerTurn() == (int)TablutPlayer.Defender);
+            Assert.AreEqual(TablutPlayer.Defender, playerTurnState.GetCurrentPlayerTurn());
         }
 
         [Test]
@@ -46,7 +46,7 @@ namespace Junnav.KingOfTablut.Tests.PlayMode
             playerTurnState.GoToNextPlayer();
 
             // Check to make sure it's attacker's turn now
-            Assert.IsTrue(playerTurnState.GetCurrentPlayerTurn() == (int)TablutPlayer.Attacker);
+            Assert.AreEqual(TablutPlayer.Attacker, playerTurnState.GetCurrentPlayerTurn());
         }
 
         [Test]
@@ -56,7 +56,7 @@ namespace Junnav.KingOfTablut.Tests.PlayMode
             PlayerTurnState playerTurnState = new();
 
             // Check to make sure attacker can move right now
-            Assert.IsTrue(playerTurnState.CanPlayerMove((int)TablutPlayer.Attacker) == true);
+            Assert.IsTrue(playerTurnState.CanPlayerMove(TablutPlayer.Attacker));
         }
 
         [Test]
@@ -66,7 +66,7 @@ namespace Junnav.KingOfTablut.Tests.PlayMode
             PlayerTurnState playerTurnState = new();
 
             // Check to make sure defender can't move right now
-            Assert.IsTrue(playerTurnState.CanPlayerMove((int)TablutPlayer.Defender) == false);
+            Assert.IsFalse(playerTurnState.CanPlayerMove(TablutPlayer.Defender));
         }
 
         [Test]
@@ -79,7 +79,7 @@ namespace Junnav.KingOfTablut.Tests.PlayMode
             playerTurnState.GoToNextPlayer();
 
             // Check to make sure attacker can't move right now
-            Assert.IsTrue(playerTurnState.CanPlayerMove((int)TablutPlayer.Attacker) == false);
+            Assert.IsFalse(playerTurnState.CanPlayerMove(TablutPlayer.Attacker));
         }
 
         [Test]
@@ -92,7 +92,7 @@ namespace Junnav.KingOfTablut.Tests.PlayMode
             playerTurnState.GoToNextPlayer();
 
             // Check to make sure defender can move right now
-            Assert.IsTrue(playerTurnState.CanPlayerMove((int)TablutPlayer.Defender) == true);
+            Assert.IsTrue(playerTurnState.CanPlayerMove(TablutPlayer.Defender));
         }
 
         [Test]
@@ -108,7 +108,7 @@ namespace Junnav.KingOfTablut.Tests.PlayMode
             playerTurnState.GoToNextPlayer();
 
             // Check to make sure attacker can move right now
-            Assert.IsTrue(playerTurnState.CanPlayerMove((int)TablutPlayer.Attacker) == true);
+            Assert.IsTrue(playerTurnState.CanPlayerMove(TablutPlayer.Attacker));
         }
 
         [Test]
@@ -124,7 +124,7 @@ namespace Junnav.KingOfTablut.Tests.PlayMode
             playerTurnState.GoToNextPlayer();
 
             // Check to make sure defender can't move right now
-            Assert.IsTrue(playerTurnState.CanPlayerMove((int)TablutPlayer.Defender) == false);
+            Assert.IsFalse(playerTurnState.CanPlayerMove(TablutPlayer.Defender));
         }
     }
 }

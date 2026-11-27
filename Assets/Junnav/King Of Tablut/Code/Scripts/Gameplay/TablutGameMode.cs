@@ -79,7 +79,7 @@ namespace Junnav.KingOfTablut.Gameplay
             return gameBoard.ToString();
         }
 
-        public TablutPlayer CurrentPlayer => (TablutPlayer)currentPlayerTurn.GetCurrentPlayerTurn();
+        public TablutPlayer CurrentPlayer => currentPlayerTurn.GetCurrentPlayerTurn();
 
         public bool CanSelectPiece(Vector2Int position)
         {
@@ -180,7 +180,7 @@ namespace Junnav.KingOfTablut.Gameplay
             }
 
             // Check if current player can move this piece
-            if (!currentPlayerTurn.CanPlayerMove((int)owningPlayer))
+            if (!currentPlayerTurn.CanPlayerMove(owningPlayer))
             {
                 return InvalidMoveMessage.WrongPlayerTurn;
             }
@@ -247,7 +247,7 @@ namespace Junnav.KingOfTablut.Gameplay
                     && !IsTargetSquareMyPiece(capturePos)
                     && (IsTargetSquareMyPiece(allyPos) || IsTargetPositionACastleSquare(allyPos)))
                 {
-                    int currentPlayer = currentPlayerTurn.GetCurrentPlayerTurn();
+                    TablutPlayer currentPlayer = CurrentPlayer;
 
                     // Check if White King has been captured
                     if (IsTargetSquareAWhiteKing(capturePos))
@@ -311,7 +311,7 @@ namespace Junnav.KingOfTablut.Gameplay
                         // A pawn captured on the same move must not replace the winning capture.
                         if (LastMoveMessage != MoveMessage.CapturedDefenderKing)
                         {
-                            LastMoveMessage = currentPlayer == (int)TablutPlayer.Attacker
+                            LastMoveMessage = currentPlayer == TablutPlayer.Attacker
                                 ? MoveMessage.CapturedDefenderPawn
                                 : MoveMessage.CapturedAttackerPawn;
                         }
@@ -329,14 +329,14 @@ namespace Junnav.KingOfTablut.Gameplay
 
         private bool IsTargetSquareMyPiece(Vector2Int targetPosition)
         {
-            int currentPlayer = currentPlayerTurn.GetCurrentPlayerTurn();
+            TablutPlayer currentPlayer = CurrentPlayer;
             TablutPieceType pieceTypeAtTarget = gameBoard.GetPiece(targetPosition);
 
-            if (currentPlayer == (int)TablutPlayer.Attacker)
+            if (currentPlayer == TablutPlayer.Attacker)
             {
                 return pieceTypeAtTarget == TablutPieceType.BlackPawn;
             }
-            else if (currentPlayer == (int)TablutPlayer.Defender)
+            else if (currentPlayer == TablutPlayer.Defender)
             {
                 return pieceTypeAtTarget == TablutPieceType.WhitePawn || pieceTypeAtTarget == TablutPieceType.WhiteKing;
             }
