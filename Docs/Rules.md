@@ -25,4 +25,4 @@ The current game has no automatic draw for repeated positions and no automatic r
 3. Attacker moves from `(0, 2)` to `(0, 3)`.
 4. Defender moves from `(5, 2)` to `(4, 2)`.
 
-[Gameplay rules code](../Assets/Junnav/King%20Of%20Tablut/Code/Scripts/Gameplay/TablutGameMode.cs) · [Rules tests](../Assets/Junnav/King%20Of%20Tablut/Code/Tests/Play%20Mode%20Tests/Gameplay/TestTablutGameMode.cs)
+[Gameplay rules code](../Assets/Junnav/King%20Of%20Tablut/Code/Scripts/Rules/TablutGameMode.cs) · [Rules tests](../Assets/Junnav/King%20Of%20Tablut/Code/Tests/Edit%20Mode%20Tests/Gameplay/TestTablutGameMode.cs)

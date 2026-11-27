@@ -1285,6 +1285,65 @@ namespace Junnav.KingOfTablut.Tests.EditMode
             AssertRejectedMoveLeavesMatchUnchanged(gameMode, new BoardPosition(0, 2), new BoardPosition(0, 1), InvalidMoveMessage.GameEnded);
         }
 
+        [Test]
+        public void OpeningSequenceEndsWithTheKingEscaping()
+        {
+            TablutGameMode gameMode = new();
+            (BoardPosition from, BoardPosition to)[] moves =
+            {
+                (new BoardPosition(0, 3), new BoardPosition(0, 2)),
+                (new BoardPosition(4, 3), new BoardPosition(6, 3)),
+                (new BoardPosition(3, 0), new BoardPosition(3, 3)),
+                (new BoardPosition(4, 2), new BoardPosition(3, 2)),
+                (new BoardPosition(8, 3), new BoardPosition(8, 2)),
+                (new BoardPosition(4, 4), new BoardPosition(4, 2)),
+                (new BoardPosition(8, 2), new BoardPosition(8, 3)),
+                (new BoardPosition(4, 2), new BoardPosition(8, 2))
+            };
+
+            for (int i = 0; i < moves.Length; i++)
+            {
+                (BoardPosition from, BoardPosition to) = moves[i];
+                Assert.IsTrue(gameMode.MovePiece(from, to),
+                    $"Move {i + 1} from {from} to {to} failed with {gameMode.LastInvalidMoveMessage}.");
+            }
+
+            Assert.AreEqual(GameState.WhiteWon, gameMode.GameState);
+            Assert.AreEqual(TablutPlayer.Attacker, gameMode.CurrentPlayer);
+
+            // Rows start at y = 0.
+            string[] expectedRows =
+            {
+                "□□□□♟♟□□□",
+                "□□□□♟□□□□",
+                "♟□□♙□□□□♔",
+                "□□□□□□♙□♟",
+                "♟♟♙♙□♙♙♟♟",
+                "♟□□□♙□□□♟",
+                "□□□□♙□□□□",
+                "□□□□♟□□□□",
+                "□□□♟♟♟□□□"
+            };
+
+            for (int y = 0; y < expectedRows.Length; y++)
+            {
+                for (int x = 0; x < expectedRows[y].Length; x++)
+                {
+                    BoardPosition square = new(x, y);
+                    TablutPieceType expected = expectedRows[y][x] switch
+                    {
+                        '♟' => TablutPieceType.BlackPawn,
+                        '♙' => TablutPieceType.WhitePawn,
+                        '♔' => TablutPieceType.WhiteKing,
+                        '□' => TablutPieceType.Empty,
+                        _ => throw new ArgumentException($"Unknown piece at {square}.")
+                    };
+
+                    Assert.AreEqual(expected, gameMode.GetPiece(square), $"Unexpected piece at {square}.");
+                }
+            }
+        }
+
         private static void AssertLegalDestinationsMatchMoves(TablutPieceType[,] positions, BoardPosition from,
             params BoardPosition[] expectedDestinations)
         {
