@@ -1,8 +1,6 @@
 using System;
 using Junnav.KingOfTablut.Gameplay;
 using NUnit.Framework;
-using UnityEngine;
-using UnityEngine.TestTools;
 
 namespace Junnav.KingOfTablut.Tests.PlayMode
 {
@@ -136,7 +134,7 @@ namespace Junnav.KingOfTablut.Tests.PlayMode
             Assert.AreEqual(TablutPieceType.WhiteKing, boardPositions[2, 6], "The White King is not at the right position!");
 
             // Output human readable board positions to log so that we can verify the positions with our own eyes
-            Debug.Log($"Added pieces locations:{Environment.NewLine}{tablutBoard}");
+            TestContext.WriteLine($"Added pieces locations:{Environment.NewLine}{tablutBoard}");
         }
 
         [Test]

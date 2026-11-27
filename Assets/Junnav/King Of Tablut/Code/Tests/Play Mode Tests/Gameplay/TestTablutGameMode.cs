@@ -3,8 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using Junnav.KingOfTablut.Gameplay;
 using NUnit.Framework;
-using UnityEngine;
-using UnityEngine.TestTools;
 
 namespace Junnav.KingOfTablut.Tests.PlayMode
 {
@@ -43,7 +41,7 @@ namespace Junnav.KingOfTablut.Tests.PlayMode
             Assert.AreEqual(TablutPieceType.BlackPawn, gameMode.GetPiece(new BoardPosition(5, 8)), "The Black Pawn is not at the right position!");
 
             // Output human readable board positions to log so that we can verify the positions with our own eyes
-            Debug.Log($"Added pieces locations:{Environment.NewLine}{gameMode}");
+            TestContext.WriteLine($"Added pieces locations:{Environment.NewLine}{gameMode}");
         }
 
         [Test]
@@ -85,7 +83,7 @@ namespace Junnav.KingOfTablut.Tests.PlayMode
             Assert.AreEqual(TablutPieceType.BlackPawn, gameMode.GetPiece(new BoardPosition(0, 4)));
 
             // Output human readable board positions to log so that we can verify the positions with our own eyes
-            Debug.Log($"Updated pieces locations:{Environment.NewLine}{gameMode}");
+            TestContext.WriteLine($"Updated pieces locations:{Environment.NewLine}{gameMode}");
         }
 
         [Test]
@@ -108,7 +106,7 @@ namespace Junnav.KingOfTablut.Tests.PlayMode
             Assert.AreEqual(TablutPieceType.Empty, gameMode.GetPiece(new BoardPosition(0, 1)));
 
             // Output human readable board positions to log so that we can verify the positions with our own eyes
-            Debug.Log($"Updated pieces locations:{Environment.NewLine}{gameMode}");
+            TestContext.WriteLine($"Updated pieces locations:{Environment.NewLine}{gameMode}");
         }
 
         [Test]
@@ -130,7 +128,7 @@ namespace Junnav.KingOfTablut.Tests.PlayMode
             Assert.AreEqual(TablutPieceType.BlackPawn, gameMode.GetPiece(new BoardPosition(0, 5)));
 
             // Output human readable board positions to log so that we can verify the positions with our own eyes
-            Debug.Log($"Updated pieces locations:{Environment.NewLine}{gameMode}");
+            TestContext.WriteLine($"Updated pieces locations:{Environment.NewLine}{gameMode}");
         }
 
         [Test]
@@ -199,7 +197,7 @@ namespace Junnav.KingOfTablut.Tests.PlayMode
             Assert.AreEqual(TablutPieceType.Empty, gameMode.GetPiece(new BoardPosition(8, 5)));
 
             // Output human readable board positions to log so that we can verify the positions with our own eyes
-            Debug.Log($"Updated pieces locations:{Environment.NewLine}{gameMode}");
+            TestContext.WriteLine($"Updated pieces locations:{Environment.NewLine}{gameMode}");
         }
 
         [Test]
@@ -231,7 +229,7 @@ namespace Junnav.KingOfTablut.Tests.PlayMode
             Assert.AreEqual(TablutPieceType.BlackPawn, gameMode.GetPiece(new BoardPosition(5, 8)));
 
             // Output human readable board positions to log so that we can verify the positions with our own eyes
-            Debug.Log($"Updated pieces locations:{Environment.NewLine}{gameMode}");
+            TestContext.WriteLine($"Updated pieces locations:{Environment.NewLine}{gameMode}");
         }
 
         [Test]
@@ -277,7 +275,7 @@ namespace Junnav.KingOfTablut.Tests.PlayMode
             Assert.AreEqual(TablutPieceType.WhitePawn, gameMode.GetPiece(new BoardPosition(8, 2)));
 
             // Output human readable board positions to log so that we can verify the positions with our own eyes
-            Debug.Log($"Updated pieces locations:{Environment.NewLine}{gameMode}");
+            TestContext.WriteLine($"Updated pieces locations:{Environment.NewLine}{gameMode}");
         }
 
         [Test]
@@ -314,7 +312,7 @@ namespace Junnav.KingOfTablut.Tests.PlayMode
             Assert.IsFalse(validMove);
 
             // Output human readable board positions to log so that we can verify the positions with our own eyes
-            Debug.Log($"Updated pieces locations:{Environment.NewLine}{gameMode}");
+            TestContext.WriteLine($"Updated pieces locations:{Environment.NewLine}{gameMode}");
         }
 
         [Test]
@@ -341,7 +339,7 @@ namespace Junnav.KingOfTablut.Tests.PlayMode
             Assert.AreEqual(InvalidMoveMessage.CannotMoveIntoCastleSquare, gameMode.LastInvalidMoveMessage);
 
             // Output human readable board positions to log so that we can verify the positions with our own eyes
-            Debug.Log($"Updated pieces locations:{Environment.NewLine}{gameMode}");
+            TestContext.WriteLine($"Updated pieces locations:{Environment.NewLine}{gameMode}");
         }
 
         [Test]
@@ -374,7 +372,7 @@ namespace Junnav.KingOfTablut.Tests.PlayMode
             Assert.AreEqual(InvalidMoveMessage.CannotMoveIntoCastleSquare, gameMode.LastInvalidMoveMessage);
 
             // Output human readable board positions to log so that we can verify the positions with our own eyes
-            Debug.Log($"Updated pieces locations:{Environment.NewLine}{gameMode}");
+            TestContext.WriteLine($"Updated pieces locations:{Environment.NewLine}{gameMode}");
         }
 
         [Test]
@@ -407,7 +405,7 @@ namespace Junnav.KingOfTablut.Tests.PlayMode
             Assert.AreEqual(InvalidMoveMessage.CannotMoveIntoCastleSquare, gameMode.LastInvalidMoveMessage);
 
             // Output human readable board positions to log so that we can verify the positions with our own eyes
-            Debug.Log($"Updated pieces locations:{Environment.NewLine}{gameMode}");
+            TestContext.WriteLine($"Updated pieces locations:{Environment.NewLine}{gameMode}");
         }
 
         public static IEnumerable<(TablutPieceType, TablutPieceType, TablutPieceType,
@@ -499,7 +497,7 @@ namespace Junnav.KingOfTablut.Tests.PlayMode
             TablutGameMode gameMode = new(customBoardPositions);
 
             // Output human readable board positions to log so that we can verify the positions with our own eyes
-            Debug.Log($"Initial pieces locations:{Environment.NewLine}{gameMode}");
+            TestContext.WriteLine($"Initial pieces locations:{Environment.NewLine}{gameMode}");
 
             // If capturer is not the attacker, then move attacker's piece for first move, otherwise defender can't move
             if (testData.capturerTwoPieceType != TablutPieceType.BlackPawn)
@@ -512,7 +510,7 @@ namespace Junnav.KingOfTablut.Tests.PlayMode
                 new BoardPosition(testData.capturerTwoMovePos.X, testData.capturerTwoMovePos.Y));
 
             // Output human readable board positions to log so that we can verify the positions with our own eyes
-            Debug.Log($"Updated pieces locations:{Environment.NewLine}{gameMode}");
+            TestContext.WriteLine($"Updated pieces locations:{Environment.NewLine}{gameMode}");
 
             // Make sure the move is valid
             Assert.IsTrue(isValid);
@@ -620,7 +618,7 @@ namespace Junnav.KingOfTablut.Tests.PlayMode
             TablutGameMode gameMode = new(customBoardPositions);
 
             // Output human readable board positions to log so that we can verify the positions with our own eyes
-            Debug.Log($"Initial pieces locations:{Environment.NewLine}{gameMode}");
+            TestContext.WriteLine($"Initial pieces locations:{Environment.NewLine}{gameMode}");
 
             // If capturer is not the attacker, then move attacker's piece for first move, otherwise defender can't move
             if (testData.captorPieceType != TablutPieceType.BlackPawn)
@@ -633,7 +631,7 @@ namespace Junnav.KingOfTablut.Tests.PlayMode
                 new BoardPosition(testData.captorOneMovePos.X, testData.captorOneMovePos.Y));
 
             // Output human readable board positions to log so that we can verify the positions with our own eyes
-            Debug.Log($"Updated pieces locations:{Environment.NewLine}{gameMode}");
+            TestContext.WriteLine($"Updated pieces locations:{Environment.NewLine}{gameMode}");
 
             // Check to make sure that the pawn has NOT been captured
             Assert.IsTrue(isValid, gameMode.LastInvalidMoveMessage.ToString());
@@ -703,7 +701,7 @@ namespace Junnav.KingOfTablut.Tests.PlayMode
             TablutGameMode gameMode = new(customBoardPositions);
 
             // Output human readable board positions to log so that we can verify the positions with our own eyes
-            Debug.Log($"Initial pieces locations:{Environment.NewLine}{gameMode}");
+            TestContext.WriteLine($"Initial pieces locations:{Environment.NewLine}{gameMode}");
 
             // If capturer is not the attacker, then move attacker's piece for first move, otherwise defender can't move
             if (testData.captorPieceType != TablutPieceType.BlackPawn)
@@ -716,7 +714,7 @@ namespace Junnav.KingOfTablut.Tests.PlayMode
                 new BoardPosition(testData.captorOneMovePos.X, testData.captorOneMovePos.Y));
             
             // Output human readable board positions to log so that we can verify the positions with our own eyes
-            Debug.Log($"Updated pieces locations:{Environment.NewLine}{gameMode}");
+            TestContext.WriteLine($"Updated pieces locations:{Environment.NewLine}{gameMode}");
 
             // If captive is not a King, just check if the square is now empty
             if (testData.captivePieceType != TablutPieceType.WhiteKing)
@@ -774,20 +772,20 @@ namespace Junnav.KingOfTablut.Tests.PlayMode
             TablutGameMode gameMode = new(customBoardPositions);
 
             // Output human readable board positions to log so that we can verify the positions with our own eyes
-            Debug.Log($"Initial pieces locations:{Environment.NewLine}{gameMode}");
+            TestContext.WriteLine($"Initial pieces locations:{Environment.NewLine}{gameMode}");
 
             // Output the game state
-            Debug.Log($"Game state: {gameMode.GameState} - Last move message: {gameMode.LastMoveMessage}");
+            TestContext.WriteLine($"Game state: {gameMode.GameState} - Last move message: {gameMode.LastMoveMessage}");
 
             // Now make a move to capture the King
             bool isCapturingMoveValid = gameMode.MovePiece(new BoardPosition(testData.captorOneStartPos.X, testData.captorOneStartPos.Y),
                 new BoardPosition(testData.captorOneTargetPos.X, testData.captorOneTargetPos.Y));
 
             // Output human readable board positions to log so that we can verify the positions with our own eyes
-            Debug.Log($"Updated pieces locations:{Environment.NewLine}{gameMode}");
+            TestContext.WriteLine($"Updated pieces locations:{Environment.NewLine}{gameMode}");
 
             // Output the game state
-            Debug.Log($"Game state: {gameMode.GameState} - Last move message: {gameMode.LastMoveMessage}");
+            TestContext.WriteLine($"Game state: {gameMode.GameState} - Last move message: {gameMode.LastMoveMessage}");
 
             // Make sure the move is valid
             Assert.IsTrue(isCapturingMoveValid, gameMode.LastInvalidMoveMessage.ToString());
@@ -832,20 +830,20 @@ namespace Junnav.KingOfTablut.Tests.PlayMode
             TablutGameMode gameMode = new(customBoardPositions);
 
             // Output human readable board positions to log so that we can verify the positions with our own eyes
-            Debug.Log($"Initial pieces locations:{Environment.NewLine}{gameMode}");
+            TestContext.WriteLine($"Initial pieces locations:{Environment.NewLine}{gameMode}");
 
             // Output the game state
-            Debug.Log($"Game state: {gameMode.GameState} - Last move message: {gameMode.LastMoveMessage}");
+            TestContext.WriteLine($"Game state: {gameMode.GameState} - Last move message: {gameMode.LastMoveMessage}");
 
             // Now make a move to capture the King
             bool isCapturingMoveValid = gameMode.MovePiece(new BoardPosition(testData.captorOneStartPos.X, testData.captorOneStartPos.Y),
                 new BoardPosition(testData.captorOneTargetPos.X, testData.captorOneTargetPos.Y));
 
             // Output human readable board positions to log so that we can verify the positions with our own eyes
-            Debug.Log($"Updated pieces locations:{Environment.NewLine}{gameMode}");
+            TestContext.WriteLine($"Updated pieces locations:{Environment.NewLine}{gameMode}");
 
             // Output the game state
-            Debug.Log($"Game state: {gameMode.GameState} - Last move message: {gameMode.LastMoveMessage}");
+            TestContext.WriteLine($"Game state: {gameMode.GameState} - Last move message: {gameMode.LastMoveMessage}");
 
             // Make sure the move is valid
             Assert.IsTrue(isCapturingMoveValid, gameMode.LastInvalidMoveMessage.ToString());
@@ -888,20 +886,20 @@ namespace Junnav.KingOfTablut.Tests.PlayMode
             TablutGameMode gameMode = new(customBoardPositions);
 
             // Output human readable board positions to log so that we can verify the positions with our own eyes
-            Debug.Log($"Initial pieces locations:{Environment.NewLine}{gameMode}");
+            TestContext.WriteLine($"Initial pieces locations:{Environment.NewLine}{gameMode}");
 
             // Output the game state
-            Debug.Log($"Game state: {gameMode.GameState} - Last move message: {gameMode.LastMoveMessage}");
+            TestContext.WriteLine($"Game state: {gameMode.GameState} - Last move message: {gameMode.LastMoveMessage}");
 
             // Now make a move to capture the King
             bool isCapturingMoveValid = gameMode.MovePiece(new BoardPosition(testData.captorOneStartPos.X, testData.captorOneStartPos.Y),
                 new BoardPosition(testData.captorOneTargetPos.X, testData.captorOneTargetPos.Y));
 
             // Output human readable board positions to log so that we can verify the positions with our own eyes
-            Debug.Log($"Updated pieces locations:{Environment.NewLine}{gameMode}");
+            TestContext.WriteLine($"Updated pieces locations:{Environment.NewLine}{gameMode}");
 
             // Output the game state
-            Debug.Log($"Game state: {gameMode.GameState} - Last move message: {gameMode.LastMoveMessage}");
+            TestContext.WriteLine($"Game state: {gameMode.GameState} - Last move message: {gameMode.LastMoveMessage}");
 
             // Make sure the move is valid
             Assert.IsTrue(isCapturingMoveValid, gameMode.LastInvalidMoveMessage.ToString());
@@ -948,14 +946,14 @@ namespace Junnav.KingOfTablut.Tests.PlayMode
             TablutGameMode gameMode = new(customBoardPositions);
 
             // Output human readable board positions to log so that we can verify the positions with our own eyes
-            Debug.Log($"Initial pieces locations:{Environment.NewLine}{gameMode}");
+            TestContext.WriteLine($"Initial pieces locations:{Environment.NewLine}{gameMode}");
 
             // Now make a move to capture the King
             bool isCapturingMoveValid = gameMode.MovePiece(new BoardPosition(testData.captorOneStartPos.X, testData.captorOneStartPos.Y),
                 new BoardPosition(testData.captorOneTargetPos.X, testData.captorOneTargetPos.Y));
 
             // Output human readable board positions to log so that we can verify the positions with our own eyes
-            Debug.Log($"Updated pieces locations:{Environment.NewLine}{gameMode}");
+            TestContext.WriteLine($"Updated pieces locations:{Environment.NewLine}{gameMode}");
 
             // Make sure the move is valid
             Assert.IsTrue(isCapturingMoveValid, gameMode.LastInvalidMoveMessage.ToString());
@@ -1001,14 +999,14 @@ namespace Junnav.KingOfTablut.Tests.PlayMode
             TablutGameMode gameMode = new(customBoardPositions);
 
             // Output human readable board positions to log so that we can verify the positions with our own eyes
-            Debug.Log($"Initial pieces locations:{Environment.NewLine}{gameMode}");
+            TestContext.WriteLine($"Initial pieces locations:{Environment.NewLine}{gameMode}");
 
             // Now make a move to capture the King
             bool isCapturingMoveValid = gameMode.MovePiece(new BoardPosition(testData.captorOneStartPos.X, testData.captorOneStartPos.Y),
                 new BoardPosition(testData.captorOneTargetPos.X, testData.captorOneTargetPos.Y));
 
             // Output human readable board positions to log so that we can verify the positions with our own eyes
-            Debug.Log($"Updated pieces locations:{Environment.NewLine}{gameMode}");
+            TestContext.WriteLine($"Updated pieces locations:{Environment.NewLine}{gameMode}");
 
             // Make sure the move is valid
             Assert.IsTrue(isCapturingMoveValid, gameMode.LastInvalidMoveMessage.ToString());
@@ -1042,10 +1040,10 @@ namespace Junnav.KingOfTablut.Tests.PlayMode
             TablutGameMode gameMode = new(customBoardPositions);
 
             // Output human readable board positions to log so that we can verify the positions with our own eyes
-            Debug.Log($"Initial pieces locations:{Environment.NewLine}{gameMode}");
+            TestContext.WriteLine($"Initial pieces locations:{Environment.NewLine}{gameMode}");
 
             // Output the game state
-            Debug.Log($"Game state: {gameMode.GameState} - Last move message: {gameMode.LastMoveMessage}");
+            TestContext.WriteLine($"Game state: {gameMode.GameState} - Last move message: {gameMode.LastMoveMessage}");
 
             // Make sure that the game is still on-going
             Assert.AreEqual(GameState.Playing, gameMode.GameState);
@@ -1057,10 +1055,10 @@ namespace Junnav.KingOfTablut.Tests.PlayMode
             bool isMoveValid = gameMode.MovePiece(testData.kingStartingPos, testData.kingTargetPos);
 
             // Output human readable board positions to log so that we can verify the positions with our own eyes
-            Debug.Log($"Updated pieces locations:{Environment.NewLine}{gameMode}");
+            TestContext.WriteLine($"Updated pieces locations:{Environment.NewLine}{gameMode}");
 
             // Output the game state
-            Debug.Log($"Game state: {gameMode.GameState} - Last move message: {gameMode.LastMoveMessage}");
+            TestContext.WriteLine($"Game state: {gameMode.GameState} - Last move message: {gameMode.LastMoveMessage}");
 
             // Make sure the move is valid
             Assert.IsTrue(isMoveValid, gameMode.LastInvalidMoveMessage.ToString());
@@ -1091,7 +1089,7 @@ namespace Junnav.KingOfTablut.Tests.PlayMode
             TablutGameMode gameMode = new(customBoardPositions);
 
             // Output human readable board positions to log so that we can verify the positions with our own eyes
-            Debug.Log($"Initial pieces locations:{Environment.NewLine}{gameMode}");
+            TestContext.WriteLine($"Initial pieces locations:{Environment.NewLine}{gameMode}");
 
             // Attacker capture defender's pawn
             gameMode.MovePiece(new BoardPosition(7, 6), new BoardPosition(7, 5));
@@ -1099,7 +1097,7 @@ namespace Junnav.KingOfTablut.Tests.PlayMode
             gameMode.MovePiece(new BoardPosition(1, 1), new BoardPosition(2, 1));
 
             // Output human readable board positions to log so that we can verify the positions with our own eyes
-            Debug.Log($"Updated pieces locations:{Environment.NewLine}{gameMode}");
+            TestContext.WriteLine($"Updated pieces locations:{Environment.NewLine}{gameMode}");
 
             // Check that the move message has been reset
             Assert.AreEqual(MoveMessage.None, gameMode.LastMoveMessage);

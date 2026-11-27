@@ -35,6 +35,9 @@
 ExportedObj/
 .consulo/
 *.csproj
+!/DotNet/*/*.csproj
+/DotNet/*/[Bb]in/
+/DotNet/*/[Oo]bj/
 *.unityproj
 *.sln
 *.suo

@@ -33,6 +33,14 @@ One regression came from the throne at `(4,4)`. Moving from `(2,1)` to `(6,1)` w
 
 In Unity, open **Window → General → Test Runner**, select **PlayMode**, and choose **Run All**. The suite covers moves, captures, both victory outcomes, and an opening move and restart through the gameplay scene.
 
+### Run the rules tests without Unity
+
+From the repository root, use the .NET 10 SDK to run the board, turn and match tests. The .NET projects compile the same C# rules and NUnit fixtures as Unity.
+
+```sh
+dotnet test DotNet/Rules.Tests/Junnav.KingOfTablut.Rules.Tests.csproj
+```
+
 ## Project scope
 
 This repository is a playable slice of an independent project. The full commercial project remains under private development. Source and assets here are provided for portfolio review and technical evaluation. All rights reserved, subject to applicable third-party licences.
