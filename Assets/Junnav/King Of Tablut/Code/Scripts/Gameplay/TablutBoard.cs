@@ -1,6 +1,5 @@
 using System;
 using System.Text;
-using UnityEngine;
 
 namespace Junnav.KingOfTablut.Gameplay
 {
@@ -11,18 +10,18 @@ namespace Junnav.KingOfTablut.Gameplay
         public const int CenterHorizontalSquare = TotalHorizontalSquares / 2;
         public const int CenterVerticalSquare = TotalVerticalSquares / 2;
 
-        public static readonly Vector2Int CastleSquare = new(CenterHorizontalSquare, CenterVerticalSquare);
+        public static readonly BoardPosition CastleSquare = new(CenterHorizontalSquare, CenterVerticalSquare);
 
         private TablutPieceType[,] boardPositions = new TablutPieceType[TotalHorizontalSquares, TotalVerticalSquares];
 
-        public bool SetPiece(TablutPieceType pieceType, Vector2Int position)
+        public bool SetPiece(TablutPieceType pieceType, BoardPosition position)
         {
             if (!IsValidPosition(position))
             {
                 return false;
             }
 
-            boardPositions[position.x, position.y] = pieceType;
+            boardPositions[position.X, position.Y] = pieceType;
 
             return true;
         }
@@ -45,9 +44,9 @@ namespace Junnav.KingOfTablut.Gameplay
             return (TablutPieceType[,])boardPositions.Clone();
         }
 
-        public TablutPieceType GetPiece(Vector2Int position)
+        public TablutPieceType GetPiece(BoardPosition position)
         {
-            return boardPositions[position.x, position.y];
+            return boardPositions[position.X, position.Y];
         }
 
         public override string ToString()
@@ -103,10 +102,10 @@ namespace Junnav.KingOfTablut.Gameplay
             return builder.ToString();
         }
 
-        public bool IsValidPosition(Vector2Int position)
+        public bool IsValidPosition(BoardPosition position)
         {
-            return position.x >= 0 && position.x < boardPositions.GetLength(0)
-                && position.y >= 0 && position.y < boardPositions.GetLength(1);
+            return position.X >= 0 && position.X < boardPositions.GetLength(0)
+                && position.Y >= 0 && position.Y < boardPositions.GetLength(1);
         }
     }
 }

@@ -18,7 +18,7 @@ namespace Junnav.KingOfTablut
         private readonly TablutPieceType[,] displayedPieces = new TablutPieceType[TablutBoard.TotalHorizontalSquares, TablutBoard.TotalVerticalSquares];
         private readonly List<LineRenderer> markers = new();
 
-        public event Action<Vector2Int> SquareClicked;
+        public event Action<BoardPosition> SquareClicked;
 
         public void OnPointerClick(PointerEventData eventData)
         {
@@ -27,9 +27,9 @@ namespace Junnav.KingOfTablut
                 return;
             }
 
-            Vector2Int position = piecePositions.GetBoardPosition(eventData.pointerCurrentRaycast.worldPosition);
-            if (position.x >= 0 && position.x < TablutBoard.TotalHorizontalSquares
-                && position.y >= 0 && position.y < TablutBoard.TotalVerticalSquares)
+            BoardPosition position = piecePositions.GetBoardPosition(eventData.pointerCurrentRaycast.worldPosition);
+            if (position.X >= 0 && position.X < TablutBoard.TotalHorizontalSquares
+                && position.Y >= 0 && position.Y < TablutBoard.TotalVerticalSquares)
             {
                 SquareClicked?.Invoke(position);
             }
@@ -41,7 +41,7 @@ namespace Junnav.KingOfTablut
             {
                 for (int y = 0; y < TablutBoard.TotalVerticalSquares; y++)
                 {
-                    Vector2Int position = new(x, y);
+                    BoardPosition position = new(x, y);
                     TablutPieceType pieceType = gameMode.GetPiece(position);
                     if (displayedPieces[x, y] == pieceType)
                     {
@@ -66,7 +66,7 @@ namespace Junnav.KingOfTablut
             }
         }
 
-        public void ShowSelection(Vector2Int selectedSquare, IReadOnlyList<Vector2Int> destinations)
+        public void ShowSelection(BoardPosition selectedSquare, IReadOnlyList<BoardPosition> destinations)
         {
             ClearSelection();
             DrawMarker(0, selectedSquare, 0.082f, new Color(1.0f, 0.78f, 0.32f));
@@ -84,7 +84,7 @@ namespace Junnav.KingOfTablut
             }
         }
 
-        private void DrawMarker(int index, Vector2Int square, float radius, Color color)
+        private void DrawMarker(int index, BoardPosition square, float radius, Color color)
         {
             if (index == markers.Count)
             {

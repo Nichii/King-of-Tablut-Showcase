@@ -1,4 +1,5 @@
 using System.Collections;
+using Junnav.KingOfTablut.Gameplay;
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -21,13 +22,13 @@ namespace Junnav.KingOfTablut.Tests.PlayMode
             Camera camera = Camera.main;
             Assert.IsNotNull(camera);
 
-            Vector2Int from = new(0, 3);
-            Vector2Int to = new(0, 2);
+            BoardPosition from = new(0, 3);
+            BoardPosition to = new(0, 2);
             Assert.AreEqual(1, GetPiecesAt(piecePositions, from).Length);
             Assert.AreEqual(0, GetPiecesAt(piecePositions, to).Length);
 
             ClickSquare(boardView, piecePositions, camera, from);
-            ClickSquare(boardView, piecePositions, camera, new Vector2Int(1, 2));
+            ClickSquare(boardView, piecePositions, camera, new BoardPosition(1, 2));
             Assert.AreEqual(1, GetPiecesAt(piecePositions, from).Length);
             Assert.AreEqual(0, GetPiecesAt(piecePositions, to).Length);
 
@@ -48,7 +49,7 @@ namespace Junnav.KingOfTablut.Tests.PlayMode
             Assert.AreEqual(0, GetPiecesAt(piecePositions, to).Length);
         }
 
-        private static GameObject[] GetPiecesAt(SetupPiecePositions piecePositions, Vector2Int square)
+        private static GameObject[] GetPiecesAt(SetupPiecePositions piecePositions, BoardPosition square)
         {
             System.Collections.Generic.List<GameObject> pieces = new();
             Vector3 localPosition = piecePositions.GetLocalPosition(square);
@@ -64,7 +65,7 @@ namespace Junnav.KingOfTablut.Tests.PlayMode
             return pieces.ToArray();
         }
 
-        private static void ClickSquare(TablutBoardView boardView, SetupPiecePositions piecePositions, Camera camera, Vector2Int square)
+        private static void ClickSquare(TablutBoardView boardView, SetupPiecePositions piecePositions, Camera camera, BoardPosition square)
         {
             Vector3 worldPosition = piecePositions.transform.TransformPoint(piecePositions.GetLocalPosition(square));
             Vector3 screenPosition = camera.WorldToScreenPoint(worldPosition);

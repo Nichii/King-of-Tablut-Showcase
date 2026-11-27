@@ -9,6 +9,19 @@ namespace Junnav.KingOfTablut.Tests.PlayMode
     public class TestTablutBoard
     {
         [Test]
+        public void BoardPositionsAreEqualWhenBothCoordinatesMatch()
+        {
+            BoardPosition position = new(2, 4);
+            BoardPosition samePosition = new(2, 4);
+
+            Assert.IsTrue(position.Equals(samePosition));
+            Assert.IsTrue(position == samePosition);
+            Assert.AreEqual(position.GetHashCode(), samePosition.GetHashCode());
+            Assert.IsTrue(position != new BoardPosition(4, 4));
+            Assert.IsTrue(position != new BoardPosition(2, 5));
+        }
+
+        [Test]
         public void SetupTablutBoard()
         {
             // Setup tablut board
@@ -49,23 +62,23 @@ namespace Junnav.KingOfTablut.Tests.PlayMode
             TablutBoard tablutBoard = new();
 
             // Add pieces to invalid positions
-            Assert.IsFalse(tablutBoard.SetPiece(TablutPieceType.WhitePawn, new Vector2Int(-1, 0)),
+            Assert.IsFalse(tablutBoard.SetPiece(TablutPieceType.WhitePawn, new BoardPosition(-1, 0)),
                 "Cannot set piece to invalid positions!");
-            Assert.IsFalse(tablutBoard.SetPiece(TablutPieceType.BlackPawn, new Vector2Int(9, 0)),
+            Assert.IsFalse(tablutBoard.SetPiece(TablutPieceType.BlackPawn, new BoardPosition(9, 0)),
                 "Cannot set piece to invalid positions!");
-            Assert.IsFalse(tablutBoard.SetPiece(TablutPieceType.WhitePawn, new Vector2Int(0, -1)),
+            Assert.IsFalse(tablutBoard.SetPiece(TablutPieceType.WhitePawn, new BoardPosition(0, -1)),
                 "Cannot set piece to invalid positions!");
-            Assert.IsFalse(tablutBoard.SetPiece(TablutPieceType.BlackPawn, new Vector2Int(0, 9)),
+            Assert.IsFalse(tablutBoard.SetPiece(TablutPieceType.BlackPawn, new BoardPosition(0, 9)),
                 "Cannot set piece to invalid positions!");
 
             // Add pieces to valid positions
-            Assert.IsTrue(tablutBoard.SetPiece(TablutPieceType.BlackPawn, new Vector2Int(0, 0)),
+            Assert.IsTrue(tablutBoard.SetPiece(TablutPieceType.BlackPawn, new BoardPosition(0, 0)),
                 "Cannot set piece to invalid positions!");
-            Assert.IsTrue(tablutBoard.SetPiece(TablutPieceType.WhitePawn, new Vector2Int(8, 0)),
+            Assert.IsTrue(tablutBoard.SetPiece(TablutPieceType.WhitePawn, new BoardPosition(8, 0)),
                 "Cannot set piece to invalid positions!");
-            Assert.IsTrue(tablutBoard.SetPiece(TablutPieceType.BlackPawn, new Vector2Int(0, 8)),
+            Assert.IsTrue(tablutBoard.SetPiece(TablutPieceType.BlackPawn, new BoardPosition(0, 8)),
                 "Cannot set piece to invalid positions!");
-            Assert.IsTrue(tablutBoard.SetPiece(TablutPieceType.WhitePawn, new Vector2Int(8, 8)),
+            Assert.IsTrue(tablutBoard.SetPiece(TablutPieceType.WhitePawn, new BoardPosition(8, 8)),
                 "Cannot set piece to invalid positions!");
         }
 
@@ -76,16 +89,16 @@ namespace Junnav.KingOfTablut.Tests.PlayMode
             TablutBoard tablutBoard = new();
 
             // Check for invalid positions
-            Assert.IsFalse(tablutBoard.IsValidPosition(new Vector2Int(-1, 0)));
-            Assert.IsFalse(tablutBoard.IsValidPosition(new Vector2Int(9, 0)));
-            Assert.IsFalse(tablutBoard.IsValidPosition(new Vector2Int(0, -1)));
-            Assert.IsFalse(tablutBoard.IsValidPosition(new Vector2Int(0, 9)));
+            Assert.IsFalse(tablutBoard.IsValidPosition(new BoardPosition(-1, 0)));
+            Assert.IsFalse(tablutBoard.IsValidPosition(new BoardPosition(9, 0)));
+            Assert.IsFalse(tablutBoard.IsValidPosition(new BoardPosition(0, -1)));
+            Assert.IsFalse(tablutBoard.IsValidPosition(new BoardPosition(0, 9)));
 
             // Check for valid positions
-            Assert.IsTrue(tablutBoard.IsValidPosition(new Vector2Int(0, 0)));
-            Assert.IsTrue(tablutBoard.IsValidPosition(new Vector2Int(8, 0)));
-            Assert.IsTrue(tablutBoard.IsValidPosition(new Vector2Int(0, 8)));
-            Assert.IsTrue(tablutBoard.IsValidPosition(new Vector2Int(8, 8)));
+            Assert.IsTrue(tablutBoard.IsValidPosition(new BoardPosition(0, 0)));
+            Assert.IsTrue(tablutBoard.IsValidPosition(new BoardPosition(8, 0)));
+            Assert.IsTrue(tablutBoard.IsValidPosition(new BoardPosition(0, 8)));
+            Assert.IsTrue(tablutBoard.IsValidPosition(new BoardPosition(8, 8)));
         }
 
         [Test]

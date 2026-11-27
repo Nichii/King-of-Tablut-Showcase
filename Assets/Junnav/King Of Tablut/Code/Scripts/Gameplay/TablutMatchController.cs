@@ -11,7 +11,7 @@ namespace Junnav.KingOfTablut
         [SerializeField] private TMP_Text moveText;
 
         private TablutGameMode gameMode;
-        private Vector2Int? selectedSquare;
+        private BoardPosition? selectedSquare;
 
         private void OnEnable()
         {
@@ -38,7 +38,7 @@ namespace Junnav.KingOfTablut
             moveText.text = "Select a piece to see its moves.";
         }
 
-        private void SelectSquare(Vector2Int position)
+        private void SelectSquare(BoardPosition position)
         {
             if (gameMode.GameState != GameState.Playing)
             {
@@ -56,7 +56,7 @@ namespace Junnav.KingOfTablut
             if (gameMode.CanSelectPiece(position))
             {
                 selectedSquare = position;
-                System.Collections.Generic.IReadOnlyList<Vector2Int> destinations = gameMode.GetLegalDestinations(position);
+                System.Collections.Generic.IReadOnlyList<BoardPosition> destinations = gameMode.GetLegalDestinations(position);
                 boardView.ShowSelection(position, destinations);
                 moveText.text = destinations.Count == 0 ? "This piece has no legal moves." : "Select a marked square.";
                 return;
