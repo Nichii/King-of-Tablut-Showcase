@@ -2,7 +2,7 @@
 
 King of Tablut is a local two-player strategy game built in Unity. The attackers try to capture the king. The defenders try to get the king to any edge of the board.
 
-[Play WebGL Demo](https://nikorasuchan.itch.io/king-of-tablut-demo) · [Download for Windows](https://github.com/Nichii/King-of-Tablut-Showcase/releases/latest/download/King-of-Tablut-Windows.zip) · [Watch gameplay](https://github.com/Nichii/King-of-Tablut-Showcase/releases/latest/download/King-of-Tablut-Gameplay.mp4) · [Read the rules code](Assets/Junnav/King%20Of%20Tablut/Code/Scripts/Gameplay/TablutGameMode.cs)
+[Play WebGL Demo](https://nikorasuchan.itch.io/king-of-tablut-demo) · [Download for Windows](https://github.com/Nichii/King-of-Tablut-Showcase/releases/latest/download/King-of-Tablut-Windows.zip) · [Watch gameplay](https://github.com/Nichii/King-of-Tablut-Showcase/releases/latest/download/King-of-Tablut-Gameplay.mp4) · [Read the rules code](Assets/Junnav/King%20Of%20Tablut/Code/Scripts/Rules/TablutGameMode.cs)
 
 ![A selected attacker and its legal destinations on the Tablut board](Docs/Gameplay.jpg)
 
@@ -27,7 +27,7 @@ To check either build, make an opening move and click **Restart**. The opening p
 
 ## Gameplay code and tests
 
-`TablutGameMode` owns the board, turns, and win conditions. The Unity scene reads its board state after a move. Move highlights use the same validation as move execution, so the view only offers squares the rules accept.
+`TablutGameMode` owns the board, turns, and win conditions. It lives in the `Junnav.KingOfTablut.Rules` assembly, which compiles without UnityEngine references. The Unity scene reads its board state after a move. Move highlights use the same validation as move execution, so the view only offers squares the rules accept.
 
 One regression came from the throne at `(4,4)`. Moving from `(2,1)` to `(6,1)` was rejected because the path crossed column 4. The [fix checks the full square](https://github.com/Nichii/King-of-Tablut-Showcase/commit/592ccfe) and tests valid moves across both axes, alongside the test that blocks a move through the throne itself.
 

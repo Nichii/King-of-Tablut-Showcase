@@ -5,7 +5,8 @@
         "UnityEngine.TestRunner",
         "UnityEngine.UI",
         "UnityEditor.TestRunner",
-        "Junnav.KingOfTablut"
+        "Junnav.KingOfTablut",
+        "Junnav.KingOfTablut.Rules"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

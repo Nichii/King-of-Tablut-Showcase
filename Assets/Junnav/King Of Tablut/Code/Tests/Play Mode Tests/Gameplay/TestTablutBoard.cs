@@ -9,6 +9,17 @@ namespace Junnav.KingOfTablut.Tests.PlayMode
     public class TestTablutBoard
     {
         [Test]
+        public void RulesCompileIntoTheirOwnAssembly()
+        {
+            var rulesAssembly = typeof(TablutGameMode).Assembly;
+
+            Assert.AreEqual("Junnav.KingOfTablut.Rules", rulesAssembly.GetName().Name);
+            Assert.AreSame(rulesAssembly, typeof(TablutBoard).Assembly);
+            Assert.IsFalse(Array.Exists(rulesAssembly.GetReferencedAssemblies(),
+                reference => reference.Name.StartsWith("Unity", StringComparison.Ordinal)));
+        }
+
+        [Test]
         public void BoardPositionsAreEqualWhenBothCoordinatesMatch()
         {
             BoardPosition position = new(2, 4);

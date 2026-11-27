@@ -1,4 +1,4 @@
 {
 	"name": "Junnav.KingOfTablut",
-	"references": ["UnityEngine.UI", "Unity.TextMeshPro"]
+	"references": ["UnityEngine.UI", "Unity.TextMeshPro", "Junnav.KingOfTablut.Rules"]
 }
