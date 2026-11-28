@@ -1228,6 +1228,56 @@ namespace Junnav.KingOfTablut.Tests.EditMode
             Assert.AreEqual(TablutPieceType.Empty, gameMode.GetPiece(new BoardPosition(5, 3)));
         }
 
+        [TestCase(TablutPlayer.Attacker, 1, 1, 3, 3, TablutPlayer.Defender)]
+        [TestCase(TablutPlayer.Defender, 3, 3, 1, 1, TablutPlayer.Attacker)]
+        public void CustomMatchUsesConfiguredStartingPlayer(TablutPlayer startingPlayer, int firstX, int firstY,
+            int otherX, int otherY, TablutPlayer nextPlayer)
+        {
+            TablutPieceType[,] positions = new TablutPieceType[9, 9];
+            positions[1, 1] = TablutPieceType.BlackPawn;
+            positions[3, 3] = TablutPieceType.WhiteKing;
+            TablutGameMode gameMode = new(positions, startingPlayer);
+            BoardPosition firstPiece = new(firstX, firstY);
+            BoardPosition otherPiece = new(otherX, otherY);
+            BoardPosition destination = new(firstX + 1, firstY);
+
+            Assert.AreEqual(startingPlayer, gameMode.CurrentPlayer);
+            Assert.IsTrue(gameMode.CanSelectPiece(firstPiece));
+            Assert.IsFalse(gameMode.CanSelectPiece(otherPiece));
+            CollectionAssert.Contains(gameMode.GetLegalDestinations(firstPiece), destination);
+            CollectionAssert.IsEmpty(gameMode.GetLegalDestinations(otherPiece));
+
+            MoveResult rejected = gameMode.MovePieceWithResult(otherPiece, new BoardPosition(otherX + 1, otherY));
+            Assert.AreEqual(InvalidMoveMessage.WrongPlayerTurn, rejected.RejectionReason);
+            Assert.AreEqual(startingPlayer, gameMode.CurrentPlayer);
+
+            Assert.IsTrue(gameMode.MovePiece(firstPiece, destination));
+            Assert.AreEqual(nextPlayer, gameMode.CurrentPlayer);
+        }
+
+        [TestCase((TablutPlayer)(-1))]
+        [TestCase((TablutPlayer)2)]
+        public void RejectsUnknownStartingPlayer(TablutPlayer startingPlayer)
+        {
+            TablutPieceType[,] positions = new TablutPieceType[9, 9];
+            positions[4, 4] = TablutPieceType.WhiteKing;
+
+            ArgumentOutOfRangeException exception = Assert.Throws<ArgumentOutOfRangeException>(
+                () => new TablutGameMode(positions, startingPlayer));
+            Assert.AreEqual("startingPlayer", exception.ParamName);
+        }
+
+        [Test]
+        public void StandardMatchRequiresAttackersToStart()
+        {
+            Assert.AreEqual(TablutPlayer.Attacker, new TablutGameMode().CurrentPlayer);
+            Assert.AreEqual(TablutPlayer.Attacker, new TablutGameMode(null, TablutPlayer.Attacker).CurrentPlayer);
+
+            ArgumentException exception = Assert.Throws<ArgumentException>(
+                () => new TablutGameMode(null, TablutPlayer.Defender));
+            Assert.AreEqual("startingPlayer", exception.ParamName);
+        }
+
         [Test]
         public void RejectsCustomBoardWithInvalidDimensions()
         {

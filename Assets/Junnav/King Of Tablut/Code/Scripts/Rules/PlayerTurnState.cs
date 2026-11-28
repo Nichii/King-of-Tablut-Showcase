@@ -1,8 +1,24 @@
-﻿namespace Junnav.KingOfTablut.Gameplay
+﻿using System;
+
+namespace Junnav.KingOfTablut.Gameplay
 {
     public class PlayerTurnState
     {
-        private TablutPlayer _currentPlayerTurn = TablutPlayer.Attacker;
+        private TablutPlayer _currentPlayerTurn;
+
+        public PlayerTurnState() : this(TablutPlayer.Attacker)
+        {
+        }
+
+        internal PlayerTurnState(TablutPlayer startingPlayer)
+        {
+            if (startingPlayer != TablutPlayer.Attacker && startingPlayer != TablutPlayer.Defender)
+            {
+                throw new ArgumentOutOfRangeException(nameof(startingPlayer), startingPlayer, "Choose either attackers or defenders.");
+            }
+
+            _currentPlayerTurn = startingPlayer;
+        }
 
         public bool CanPlayerMove(TablutPlayer player)
         {

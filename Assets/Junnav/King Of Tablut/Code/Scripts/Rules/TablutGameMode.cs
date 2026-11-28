@@ -19,18 +19,36 @@ namespace Junnav.KingOfTablut.Gameplay
         public InvalidMoveMessage LastInvalidMoveMessage { get; private set; } = InvalidMoveMessage.None;
         public MoveMessage LastMoveMessage { get; private set; } = MoveMessage.None;
 
-        private readonly PlayerTurnState currentPlayerTurn = new();
+        private readonly PlayerTurnState currentPlayerTurn;
 
         /// <summary>
-        /// Starts a match with the standard layout or a copy of the supplied positions.
+        /// Starts a match with the standard layout or a copy of the supplied positions. Attackers move first.
         /// </summary>
         /// <exception cref="ArgumentException">
         /// The custom layout has the wrong dimensions, an unknown piece type, or a king count other than one.
         /// </exception>
         public TablutGameMode(TablutPieceType[,] customBoardPositions = null)
+            : this(customBoardPositions, TablutPlayer.Attacker)
         {
+        }
+
+        /// <summary>
+        /// Starts a match from a copy of the supplied positions with the specified side to move.
+        /// A null layout uses the standard setup and requires attackers to move first.
+        /// </summary>
+        /// <exception cref="ArgumentOutOfRangeException">The starting side is undefined.</exception>
+        /// <exception cref="ArgumentException">The layout is invalid or the standard setup was given a defender start.</exception>
+        public TablutGameMode(TablutPieceType[,] customBoardPositions, TablutPlayer startingPlayer)
+        {
+            currentPlayerTurn = new(startingPlayer);
+
             if (customBoardPositions == null)
             {
+                if (startingPlayer != TablutPlayer.Attacker)
+                {
+                    throw new ArgumentException("Attackers must start on the standard board.", nameof(startingPlayer));
+                }
+
                 StandardTablutSetup.SetupStandardPositions(gameBoard);
                 return;
             }
