@@ -34,7 +34,7 @@ namespace Junnav.KingOfTablut
             selectedSquare = null;
             boardView.ClearSelection();
             boardView.ShowPieces(gameMode);
-            UpdateTurnText();
+            UpdateTurnText(gameMode.GameState);
             moveText.text = "Select a piece to see its moves.";
         }
 
@@ -68,28 +68,33 @@ namespace Junnav.KingOfTablut
                 return;
             }
 
-            if (!gameMode.MovePiece(selectedSquare.Value, position))
+            MoveResult result = gameMode.MovePieceWithResult(selectedSquare.Value, position);
+            if (!result.Succeeded)
             {
-                moveText.text = GetInvalidMoveText(gameMode.LastInvalidMoveMessage);
+                moveText.text = GetInvalidMoveText(result.RejectionReason);
                 return;
             }
 
             selectedSquare = null;
             boardView.ClearSelection();
             boardView.ShowPieces(gameMode);
-            UpdateTurnText();
-            moveText.text = gameMode.LastMoveMessage switch
+            UpdateTurnText(result.GameState);
+
+            int captureCount = result.Captures.Count;
+            moveText.text = result.Message switch
             {
                 MoveMessage.CapturedDefenderKing => "The attackers captured the king.",
+                MoveMessage.CapturedDefenderPawn when captureCount > 1 => $"{captureCount} defenders were captured.",
                 MoveMessage.CapturedDefenderPawn => "A defender was captured.",
+                MoveMessage.CapturedAttackerPawn when captureCount > 1 => $"{captureCount} attackers were captured.",
                 MoveMessage.CapturedAttackerPawn => "An attacker was captured.",
-                _ => gameMode.GameState == GameState.WhiteWon ? "The king reached the edge." : "Select a piece to see its moves."
+                _ => result.GameState == GameState.WhiteWon ? "The king reached the edge." : "Select a piece to see its moves."
             };
         }
 
-        private void UpdateTurnText()
+        private void UpdateTurnText(GameState gameState)
         {
-            turnText.text = gameMode.GameState switch
+            turnText.text = gameState switch
             {
                 GameState.BlackWon => "Attackers win",
                 GameState.WhiteWon => "Defenders win",

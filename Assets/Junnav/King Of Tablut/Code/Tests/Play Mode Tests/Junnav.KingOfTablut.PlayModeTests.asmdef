@@ -4,6 +4,7 @@
     "references": [
         "UnityEngine.TestRunner",
         "UnityEngine.UI",
+        "Unity.TextMeshPro",
         "UnityEditor.TestRunner",
         "Junnav.KingOfTablut",
         "Junnav.KingOfTablut.Rules"
