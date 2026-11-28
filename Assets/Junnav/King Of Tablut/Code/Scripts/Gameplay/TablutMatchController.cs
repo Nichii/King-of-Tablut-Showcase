@@ -12,6 +12,8 @@ namespace Junnav.KingOfTablut
         [SerializeField] private TablutScenario scenario;
         [SerializeField] private bool playAgainstComputer;
         [SerializeField] private int opponentSeed;
+        [SerializeField] private TablutMatchMenu menu;
+        [SerializeField] private Canvas matchHud;
 
         private TablutGameMode gameMode;
         private RandomTablutOpponent opponent;
@@ -29,6 +31,13 @@ namespace Junnav.KingOfTablut
 
         private void Start()
         {
+            menu?.Bind(this, matchHud);
+            RestartMatch();
+        }
+
+        internal void StartMatch(bool computerDefender)
+        {
+            playAgainstComputer = computerDefender;
             RestartMatch();
         }
 
@@ -41,7 +50,10 @@ namespace Junnav.KingOfTablut
             boardView.ShowPieces(gameMode);
             UpdateTurnText(gameMode.GameState);
             moveText.text = "Select a piece to see its moves.";
-            PlayComputerTurn();
+            if (menu == null || menu.IsPlaying)
+            {
+                PlayComputerTurn();
+            }
         }
 
         private TablutGameMode CreateMatch()
@@ -61,7 +73,7 @@ namespace Junnav.KingOfTablut
 
         private void SelectSquare(BoardPosition position)
         {
-            if (gameMode.GameState != GameState.Playing || IsComputerTurn())
+            if ((menu != null && !menu.IsPlaying) || gameMode.GameState != GameState.Playing || IsComputerTurn())
             {
                 return;
             }
@@ -141,6 +153,11 @@ namespace Junnav.KingOfTablut
                 MoveMessage.CapturedAttackerPawn => "An attacker was captured.",
                 _ => result.GameState == GameState.WhiteWon ? "The king reached the edge." : "Select a piece to see its moves."
             };
+
+            if (result.GameState != GameState.Playing)
+            {
+                menu?.ShowResult(result.GameState);
+            }
 
             return true;
         }
