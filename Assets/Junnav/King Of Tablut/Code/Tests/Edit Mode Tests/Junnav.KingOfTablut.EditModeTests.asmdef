@@ -4,6 +4,7 @@
     "references": [
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner",
+        "Junnav.KingOfTablut",
         "Junnav.KingOfTablut.Rules"
     ],
     "includePlatforms": [

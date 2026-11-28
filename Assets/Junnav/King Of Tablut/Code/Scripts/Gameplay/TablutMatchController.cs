@@ -9,6 +9,7 @@ namespace Junnav.KingOfTablut
         [SerializeField] private TablutBoardView boardView;
         [SerializeField] private TMP_Text turnText;
         [SerializeField] private TMP_Text moveText;
+        [SerializeField] private TablutScenario scenario;
 
         private TablutGameMode gameMode;
         private BoardPosition? selectedSquare;
@@ -30,12 +31,27 @@ namespace Junnav.KingOfTablut
 
         public void RestartMatch()
         {
-            gameMode = new();
+            gameMode = CreateMatch();
             selectedSquare = null;
             boardView.ClearSelection();
             boardView.ShowPieces(gameMode);
             UpdateTurnText(gameMode.GameState);
             moveText.text = "Select a piece to see its moves.";
+        }
+
+        private TablutGameMode CreateMatch()
+        {
+            if (scenario != null)
+            {
+                if (scenario.TryCreateMatch(out TablutGameMode match, out string error))
+                {
+                    return match;
+                }
+
+                Debug.LogWarning($"Scenario '{scenario.ScenarioName}' is invalid. {error} Starting a standard match.", scenario);
+            }
+
+            return new TablutGameMode();
         }
 
         private void SelectSquare(BoardPosition position)

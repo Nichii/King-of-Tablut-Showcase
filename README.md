@@ -14,6 +14,12 @@ To run from source, open the project in Unity **6000.3.24f1**, open `TablutGamep
 
 See the [Tablut rules](Docs/Rules.md) for movement, captures, and how a match ends.
 
+### Try the King Escape scenario
+
+Open §TablutGameplayScene§, select **Tablut Match**, and assign **King Escape** from §Level/Scenarios§ to the controller's **Scenario** field. Enter Play Mode and slide the king to the edge. **Restart** reloads the assigned layout. Clear the field to play the standard match.
+
+To make a scenario, use **Assets → Create → Tablut → Scenario**. Enter the starting side and piece coordinates from 0 to 8. The asset's **Validate Scenario** menu command reports problems in the Console. If an assigned scenario is invalid, the scene logs the reason and starts a standard match.
+
 ## Build from source
 
 Open the project in Unity **6000.3.24f1**. Install **Web Build Support** for that editor version through Unity Hub if you want a browser build.

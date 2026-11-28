@@ -7,6 +7,9 @@ using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.TestTools;
 using UnityEngine.UI;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 namespace Junnav.KingOfTablut.Tests.PlayMode
 {
@@ -41,11 +44,7 @@ namespace Junnav.KingOfTablut.Tests.PlayMode
             Assert.AreEqual(1, GetPiecesAt(piecePositions, to).Length);
             AssertFeedback("Defenders to move", "Select a piece to see its moves.");
 
-            Button restartButton = Object.FindFirstObjectByType<Button>();
-            Assert.IsNotNull(restartButton);
-            Canvas.ForceUpdateCanvases();
-            Vector2 restartPoint = RectTransformUtility.WorldToScreenPoint(null, restartButton.transform.position);
-            ClickAt(restartPoint, restartButton.gameObject);
+            ClickRestart();
             yield return null;
 
             Assert.AreEqual(1, GetPiecesAt(piecePositions, from).Length);
@@ -111,6 +110,92 @@ namespace Junnav.KingOfTablut.Tests.PlayMode
             MovePiece(boardView, piecePositions, camera, new BoardPosition(4, 2), new BoardPosition(8, 2));
 
             AssertFeedback("Defenders win", "The king reached the edge.");
+        }
+
+#if UNITY_EDITOR
+        [UnityTest]
+        public IEnumerator RestartsTheAssignedScenarioWithoutChangingTheAsset()
+        {
+            yield return SceneManager.LoadSceneAsync("TablutGameplayScene");
+            yield return null;
+
+            TablutScenario scenario = AssetDatabase.LoadAssetAtPath<TablutScenario>(
+                "Assets/Junnav/King Of Tablut/Level/Scenarios/King Escape.asset");
+            Assert.IsNotNull(scenario);
+            string assetBeforeMatch = EditorJsonUtility.ToJson(scenario);
+            Assert.AreEqual("King Escape", scenario.ScenarioName);
+            Assert.IsNotEmpty(scenario.Description);
+
+            TablutBoardView boardView = Object.FindFirstObjectByType<TablutBoardView>();
+            SetupPiecePositions piecePositions = boardView.GetComponent<SetupPiecePositions>();
+            Camera camera = Camera.main;
+            BoardPosition from = new(4, 2);
+            BoardPosition edge = new(4, 0);
+
+            AssignScenario(scenario);
+            for (int i = 0; i < 2; i++)
+            {
+                ClickRestart();
+                AssertFeedback("Defenders to move", "Select a piece to see its moves.");
+                Assert.AreEqual(1, GetPiecesAt(piecePositions, from).Length);
+                Assert.AreEqual(0, GetPiecesAt(piecePositions, edge).Length);
+
+                MovePiece(boardView, piecePositions, camera, from, edge);
+                AssertFeedback("Defenders win", "The king reached the edge.");
+                Assert.AreEqual(1, GetPiecesAt(piecePositions, edge).Length);
+            }
+
+            Assert.AreEqual(assetBeforeMatch, EditorJsonUtility.ToJson(scenario));
+        }
+
+        [UnityTest]
+        public IEnumerator InvalidScenarioRestartsTheStandardMatch()
+        {
+            yield return SceneManager.LoadSceneAsync("TablutGameplayScene");
+            yield return null;
+
+            TablutBoardView boardView = Object.FindFirstObjectByType<TablutBoardView>();
+            SetupPiecePositions piecePositions = boardView.GetComponent<SetupPiecePositions>();
+            BoardPosition from = new(0, 3);
+            BoardPosition to = new(0, 2);
+            MovePiece(boardView, piecePositions, Camera.main, from, to);
+            AssertFeedback("Defenders to move", "Select a piece to see its moves.");
+
+            TablutScenario scenario = ScriptableObject.CreateInstance<TablutScenario>();
+            scenario.name = "Invalid Scenario";
+            try
+            {
+                AssignScenario(scenario);
+                LogAssert.Expect(LogType.Warning, new System.Text.RegularExpressions.Regex(
+                    "Invalid Scenario.*exactly one king"));
+                ClickRestart();
+
+                AssertFeedback("Attackers to move", "Select a piece to see its moves.");
+                Assert.AreEqual(1, GetPiecesAt(piecePositions, TablutBoard.CastleSquare).Length);
+                Assert.AreEqual(1, GetPiecesAt(piecePositions, from).Length);
+                Assert.AreEqual(0, GetPiecesAt(piecePositions, to).Length);
+            }
+            finally
+            {
+                Object.Destroy(scenario);
+            }
+        }
+
+        private static void AssignScenario(TablutScenario scenario)
+        {
+            SerializedObject controller = new(Object.FindFirstObjectByType<TablutMatchController>());
+            controller.FindProperty("scenario").objectReferenceValue = scenario;
+            controller.ApplyModifiedPropertiesWithoutUndo();
+        }
+#endif
+
+        private static void ClickRestart()
+        {
+            Button restartButton = Object.FindFirstObjectByType<Button>();
+            Assert.IsNotNull(restartButton);
+            Canvas.ForceUpdateCanvases();
+            Vector2 restartPoint = RectTransformUtility.WorldToScreenPoint(null, restartButton.transform.position);
+            ClickAt(restartPoint, restartButton.gameObject);
         }
 
         private static void AssertFeedback(string turn, string move)
