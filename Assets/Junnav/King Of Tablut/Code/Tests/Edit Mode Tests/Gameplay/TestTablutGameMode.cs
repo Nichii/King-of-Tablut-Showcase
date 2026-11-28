@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Junnav.KingOfTablut.Gameplay;
 using NUnit.Framework;
 
@@ -1130,6 +1131,75 @@ namespace Junnav.KingOfTablut.Tests.EditMode
         }
 
         [Test]
+        public void MoveResultIncludesEveryPawnCapturedByTheMove()
+        {
+            TablutPieceType[,] positions = new TablutPieceType[9, 9];
+            positions[7, 7] = TablutPieceType.WhiteKing;
+            positions[3, 1] = TablutPieceType.BlackPawn;
+            positions[1, 3] = TablutPieceType.BlackPawn;
+            positions[5, 3] = TablutPieceType.BlackPawn;
+            positions[2, 3] = TablutPieceType.WhitePawn;
+            positions[4, 3] = TablutPieceType.WhitePawn;
+            TablutGameMode gameMode = new(positions);
+
+            MoveResult result = gameMode.MovePieceWithResult(new BoardPosition(3, 1), new BoardPosition(3, 3));
+
+            Assert.IsTrue(result.Succeeded);
+            Assert.AreEqual(InvalidMoveMessage.None, result.RejectionReason);
+            Assert.AreEqual(MoveMessage.CapturedDefenderPawn, result.Message);
+            Assert.AreEqual(GameState.Playing, result.GameState);
+            CollectionAssert.AreEquivalent(new[]
+            {
+                (TablutPieceType.WhitePawn, new BoardPosition(2, 3)),
+                (TablutPieceType.WhitePawn, new BoardPosition(4, 3))
+            }, result.Captures.Select(capture => (capture.PieceType, capture.Position)));
+
+            foreach (CapturedPiece capture in result.Captures)
+            {
+                Assert.AreEqual(TablutPieceType.Empty, gameMode.GetPiece(capture.Position));
+            }
+        }
+
+        [Test]
+        public void RejectedMoveResultDoesNotReuseCapturesFromPreviousMove()
+        {
+            TablutPieceType[,] positions = new TablutPieceType[9, 9];
+            positions[7, 7] = TablutPieceType.WhiteKing;
+            positions[1, 3] = TablutPieceType.BlackPawn;
+            positions[2, 3] = TablutPieceType.WhitePawn;
+            positions[3, 1] = TablutPieceType.BlackPawn;
+            TablutGameMode gameMode = new(positions);
+
+            BoardPosition king = new(7, 7);
+            MoveResult capture = gameMode.MovePieceWithResult(new BoardPosition(3, 1), new BoardPosition(3, 3));
+            TablutPieceType[,] boardAfterCapture = ReadBoard(gameMode);
+            MoveResult rejected = gameMode.MovePieceWithResult(king, new BoardPosition(9, 7));
+
+            Assert.IsTrue(capture.Succeeded);
+            Assert.IsFalse(rejected.Succeeded);
+            Assert.AreEqual(InvalidMoveMessage.OutOfBound, rejected.RejectionReason);
+            Assert.AreEqual(MoveMessage.None, rejected.Message);
+            Assert.AreEqual(GameState.Playing, rejected.GameState);
+            CollectionAssert.IsEmpty(rejected.Captures);
+            CollectionAssert.AreEqual(boardAfterCapture, ReadBoard(gameMode));
+            Assert.AreEqual(TablutPlayer.Defender, gameMode.CurrentPlayer);
+
+            if (capture.Captures is IList<CapturedPiece> captures)
+            {
+                Assert.Throws<NotSupportedException>(() => captures[0] = default);
+            }
+
+            MoveResult escape = gameMode.MovePieceWithResult(king, new BoardPosition(7, 8));
+            Assert.IsTrue(escape.Succeeded);
+            Assert.AreEqual(GameState.WhiteWon, escape.GameState);
+            CollectionAssert.IsEmpty(escape.Captures);
+
+            Assert.AreEqual(GameState.Playing, capture.GameState);
+            CollectionAssert.AreEqual(new[] { (TablutPieceType.WhitePawn, new BoardPosition(2, 3)) },
+                capture.Captures.Select(piece => (piece.PieceType, piece.Position)));
+        }
+
+        [Test]
         public void KingCaptureTakesPrecedenceOverPawnCapture()
         {
             TablutPieceType[,] positions = new TablutPieceType[9, 9];
@@ -1142,7 +1212,16 @@ namespace Junnav.KingOfTablut.Tests.EditMode
             positions[6, 3] = TablutPieceType.BlackPawn;
             TablutGameMode gameMode = new(positions);
 
-            Assert.IsTrue(gameMode.MovePiece(new BoardPosition(4, 1), new BoardPosition(4, 3)));
+            MoveResult result = gameMode.MovePieceWithResult(new BoardPosition(4, 1), new BoardPosition(4, 3));
+
+            Assert.IsTrue(result.Succeeded);
+            Assert.AreEqual(GameState.BlackWon, result.GameState);
+            Assert.AreEqual(MoveMessage.CapturedDefenderKing, result.Message);
+            CollectionAssert.AreEquivalent(new[]
+            {
+                (TablutPieceType.WhiteKing, new BoardPosition(4, 4)),
+                (TablutPieceType.WhitePawn, new BoardPosition(5, 3))
+            }, result.Captures.Select(capture => (capture.PieceType, capture.Position)));
             Assert.AreEqual(MoveMessage.CapturedDefenderKing, gameMode.LastMoveMessage);
             Assert.AreEqual(GameState.BlackWon, gameMode.GameState);
             Assert.AreEqual(TablutPieceType.WhiteKing, gameMode.GetPiece(new BoardPosition(4, 4)));

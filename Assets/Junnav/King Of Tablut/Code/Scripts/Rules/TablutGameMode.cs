@@ -108,14 +108,19 @@ namespace Junnav.KingOfTablut.Gameplay
 
         public bool MovePiece(BoardPosition from, BoardPosition to)
         {
-            // Reset last move messages
-            LastInvalidMoveMessage = InvalidMoveMessage.None;
-            LastMoveMessage = MoveMessage.None;
+            return MovePieceWithResult(from, to).Succeeded;
+        }
 
+        /// <summary>
+        /// Attempts a move and reports its rejection reason, captures, and resulting match state.
+        /// </summary>
+        public MoveResult MovePieceWithResult(BoardPosition from, BoardPosition to)
+        {
+            LastMoveMessage = MoveMessage.None;
             LastInvalidMoveMessage = ValidateMove(from, to);
             if (LastInvalidMoveMessage != InvalidMoveMessage.None)
             {
-                return false;
+                return new MoveResult(LastInvalidMoveMessage, LastMoveMessage, GameState);
             }
 
             TablutPieceType currentPieceType = gameBoard.GetPiece(from);
@@ -124,10 +129,27 @@ namespace Junnav.KingOfTablut.Gameplay
             gameBoard.SetPiece(TablutPieceType.Empty, from);
             gameBoard.SetPiece(currentPieceType, to);
 
-            // Check for captures for the piece last moved
+            List<CapturedPiece> captures = null;
             foreach ((int x, int y) direction in s_surroundingDirections)
             {
-                TryCaptureDirection(to, direction);
+                if (CaptureInDirection(to, direction) is CapturedPiece capture)
+                {
+                    captures ??= new List<CapturedPiece>();
+                    captures.Add(capture);
+
+                    if (capture.PieceType == TablutPieceType.WhiteKing)
+                    {
+                        GameState = GameState.BlackWon;
+                        LastMoveMessage = MoveMessage.CapturedDefenderKing;
+                    }
+                    // A pawn captured on the same move must not replace the winning capture.
+                    else if (LastMoveMessage != MoveMessage.CapturedDefenderKing)
+                    {
+                        LastMoveMessage = capture.PieceType == TablutPieceType.WhitePawn
+                            ? MoveMessage.CapturedDefenderPawn
+                            : MoveMessage.CapturedAttackerPawn;
+                    }
+                }
             }
 
             // If White King, check if it has reached the winning squares (edge of the board)
@@ -145,7 +167,7 @@ namespace Junnav.KingOfTablut.Gameplay
             // End current player's turn
             currentPlayerTurn.GoToNextPlayer();
 
-            return true;
+            return new MoveResult(LastInvalidMoveMessage, LastMoveMessage, GameState, captures);
         }
 
         private InvalidMoveMessage ValidateMove(BoardPosition from, BoardPosition to)
@@ -233,23 +255,22 @@ namespace Junnav.KingOfTablut.Gameplay
             return InvalidMoveMessage.None;
         }
 
-        private bool TryCaptureDirection(BoardPosition currentPosition, (int x, int y) captureDirection)
+        private CapturedPiece? CaptureInDirection(BoardPosition currentPosition, (int x, int y) captureDirection)
         {
             // The position of the piece we're attempting to capture
             BoardPosition capturePos = currentPosition.Offset(captureDirection.x, captureDirection.y);
-            // Check that ally (or empty castle) is on the other side to capture this piece
+            // The square beyond the target must contain an ally or be the castle.
             BoardPosition allyPos = currentPosition.Offset(captureDirection.x * 2, captureDirection.y * 2);
 
             if (gameBoard.IsValidPosition(capturePos) && gameBoard.IsValidPosition(allyPos))
             {
-                if (gameBoard.GetPiece(capturePos) != TablutPieceType.Empty
+                TablutPieceType pieceType = gameBoard.GetPiece(capturePos);
+                if (pieceType != TablutPieceType.Empty
                     && !IsTargetSquareMyPiece(capturePos)
                     && (IsTargetSquareMyPiece(allyPos) || IsTargetPositionACastleSquare(allyPos)))
                 {
-                    TablutPlayer currentPlayer = CurrentPlayer;
-
                     // Check if White King has been captured
-                    if (IsTargetSquareAWhiteKing(capturePos))
+                    if (pieceType == TablutPieceType.WhiteKing)
                     {
                         bool isWhiteKingCaptured = false;
 
@@ -298,32 +319,18 @@ namespace Junnav.KingOfTablut.Gameplay
 
                         if (isWhiteKingCaptured)
                         {
-                            LastMoveMessage = MoveMessage.CapturedDefenderKing;
-                            GameState = GameState.BlackWon;
-
-                            return true;
+                            return new CapturedPiece(pieceType, capturePos);
                         }
                     }
-                    // Otherwise, its the pawn that has been captured
                     else
                     {
-                        // A pawn captured on the same move must not replace the winning capture.
-                        if (LastMoveMessage != MoveMessage.CapturedDefenderKing)
-                        {
-                            LastMoveMessage = currentPlayer == TablutPlayer.Attacker
-                                ? MoveMessage.CapturedDefenderPawn
-                                : MoveMessage.CapturedAttackerPawn;
-                        }
-
-                        // Destroy the pawn at that position too
                         gameBoard.SetPiece(TablutPieceType.Empty, capturePos);
-
-                        return true;
+                        return new CapturedPiece(pieceType, capturePos);
                     }
                 }
             }
 
-            return false;
+            return null;
         }
 
         private bool IsTargetSquareMyPiece(BoardPosition targetPosition)
@@ -352,13 +359,6 @@ namespace Junnav.KingOfTablut.Gameplay
         {
             return ((targetPosition.X == TablutBoard.CastleSquare.X && Math.Abs(targetPosition.Y - TablutBoard.CastleSquare.Y) == 1)
                 || (targetPosition.Y == TablutBoard.CastleSquare.Y && Math.Abs(targetPosition.X - TablutBoard.CastleSquare.X) == 1));
-        }
-
-        private bool IsTargetSquareAWhiteKing(BoardPosition targetPosition)
-        {
-            TablutPieceType pieceTypeAtTarget = gameBoard.GetPiece(targetPosition);
-
-            return pieceTypeAtTarget == TablutPieceType.WhiteKing;
         }
     }
 }
