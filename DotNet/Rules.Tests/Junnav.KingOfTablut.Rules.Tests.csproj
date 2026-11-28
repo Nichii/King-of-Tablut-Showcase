@@ -15,5 +15,6 @@
         <Compile Include="$(GameplayTests)/TestTablutBoard.cs" LinkBase="Gameplay" />
         <Compile Include="$(GameplayTests)/TestTablutGameMode.cs" LinkBase="Gameplay" />
         <Compile Include="$(GameplayTests)/TestTablutPlayersTurnState.cs" LinkBase="Gameplay" />
+        <Compile Include="$(GameplayTests)/TestTablutReplay.cs" LinkBase="Gameplay" />
     </ItemGroup>
 </Project>
