@@ -104,24 +104,37 @@ namespace Junnav.KingOfTablut.Gameplay
         }
 
         /// <summary>
-        /// Lists the squares the current player can move to without changing the match.
+        /// Lists the squares the current player can move to in column and row order without changing the match.
         /// </summary>
         public IReadOnlyList<BoardPosition> GetLegalDestinations(BoardPosition from)
         {
             List<BoardPosition> destinations = new();
-            for (int x = 0; x < TablutBoard.TotalHorizontalSquares; x++)
+            if (!CanSelectPiece(from))
             {
-                for (int y = 0; y < TablutBoard.TotalVerticalSquares; y++)
-                {
-                    BoardPosition to = new(x, y);
-                    if (ValidateMove(from, to) == InvalidMoveMessage.None)
-                    {
-                        destinations.Add(to);
-                    }
-                }
+                return destinations;
             }
 
+            // Reverse the walks toward lower coordinates to keep the board's column and row order.
+            AddDestinationsAlongRay(from, -1, 0, destinations);
+            destinations.Reverse();
+
+            int columnStart = destinations.Count;
+            AddDestinationsAlongRay(from, 0, -1, destinations);
+            destinations.Reverse(columnStart, destinations.Count - columnStart);
+            AddDestinationsAlongRay(from, 0, 1, destinations);
+            AddDestinationsAlongRay(from, 1, 0, destinations);
+
             return destinations;
+        }
+
+        private void AddDestinationsAlongRay(BoardPosition from, int x, int y, List<BoardPosition> destinations)
+        {
+            for (BoardPosition to = from.Offset(x, y);
+                 gameBoard.IsValidPosition(to) && GetBlockingReason(to) == InvalidMoveMessage.None;
+                 to = to.Offset(x, y))
+            {
+                destinations.Add(to);
+            }
         }
 
         public bool MovePiece(BoardPosition from, BoardPosition to)
@@ -230,47 +243,37 @@ namespace Junnav.KingOfTablut.Gameplay
                 return InvalidMoveMessage.OnlyOrthogonalMovementAllowed;
             }
 
-            // Check if the destination square is occupied
-            if (gameBoard.GetPiece(to) != TablutPieceType.Empty)
+            // An occupied destination takes precedence over blockers along the path.
+            InvalidMoveMessage destinationBlocker = GetBlockingReason(to);
+            if (destinationBlocker == InvalidMoveMessage.CannotJumpOverPieces)
             {
                 return InvalidMoveMessage.OccupiedSpace;
             }
 
-            // Check if there are any pieces in the way
             int xDir = Math.Sign(to.X - from.X);
-            for (int x = from.X + xDir; x != to.X; x += xDir)
-            {
-                if (gameBoard.GetPiece(new BoardPosition(x, to.Y)) != TablutPieceType.Empty)
-                {
-                    return InvalidMoveMessage.CannotJumpOverPieces;
-                }
-                // Also disallow jumping over castle squares
-                else if (IsTargetPositionACastleSquare(new BoardPosition(x, to.Y)))
-                {
-                    return InvalidMoveMessage.CannotMoveIntoCastleSquare;
-                }
-            }
             int yDir = Math.Sign(to.Y - from.Y);
-            for (int y = from.Y + yDir; y != to.Y; y += yDir)
+            for (BoardPosition square = from.Offset(xDir, yDir); square != to; square = square.Offset(xDir, yDir))
             {
-                if (gameBoard.GetPiece(new BoardPosition(to.X, y)) != TablutPieceType.Empty)
+                InvalidMoveMessage blocker = GetBlockingReason(square);
+                if (blocker != InvalidMoveMessage.None)
                 {
-                    return InvalidMoveMessage.CannotJumpOverPieces;
-                }
-                // Also disallow jumping over castle squares
-                else if (IsTargetPositionACastleSquare(new BoardPosition(to.X, y)))
-                {
-                    return InvalidMoveMessage.CannotMoveIntoCastleSquare;
+                    return blocker;
                 }
             }
 
-            // Disallow moving into castle square
-            if (IsTargetPositionACastleSquare(to))
+            return destinationBlocker;
+        }
+
+        private InvalidMoveMessage GetBlockingReason(BoardPosition square)
+        {
+            if (gameBoard.GetPiece(square) != TablutPieceType.Empty)
             {
-                return InvalidMoveMessage.CannotMoveIntoCastleSquare;
+                return InvalidMoveMessage.CannotJumpOverPieces;
             }
 
-            return InvalidMoveMessage.None;
+            return IsTargetPositionACastleSquare(square)
+                ? InvalidMoveMessage.CannotMoveIntoCastleSquare
+                : InvalidMoveMessage.None;
         }
 
         private CapturedPiece? CaptureInDirection(BoardPosition currentPosition, (int x, int y) captureDirection)

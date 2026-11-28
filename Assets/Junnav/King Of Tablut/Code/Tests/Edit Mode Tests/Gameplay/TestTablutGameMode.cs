@@ -1337,6 +1337,7 @@ namespace Junnav.KingOfTablut.Tests.EditMode
             Assert.IsTrue(gameMode.CanSelectPiece(from));
             Assert.IsFalse(gameMode.CanSelectPiece(new BoardPosition(4, 4)));
             CollectionAssert.IsEmpty(gameMode.GetLegalDestinations(new BoardPosition(4, 4)));
+            CollectionAssert.IsEmpty(gameMode.GetLegalDestinations(new BoardPosition(-1, 3)));
 
             Assert.AreEqual(TablutPlayer.Attacker, gameMode.CurrentPlayer);
             Assert.AreEqual(TablutPieceType.BlackPawn, gameMode.GetPiece(from));
@@ -1364,6 +1365,45 @@ namespace Junnav.KingOfTablut.Tests.EditMode
                 new BoardPosition(column, 2),
                 new BoardPosition(column, 1),
                 new BoardPosition(column, 0));
+        }
+
+        [TestCase(TablutPlayer.Attacker)]
+        [TestCase(TablutPlayer.Defender)]
+        public void LegalDestinationsMatchMoveExecutionForEverySquare(TablutPlayer startingPlayer)
+        {
+            TablutPieceType[,] positions = new TablutPieceType[9, 9];
+            positions[4, 6] = TablutPieceType.WhiteKing;
+            positions[2, 2] = TablutPieceType.WhitePawn;
+            positions[6, 4] = TablutPieceType.WhitePawn;
+            positions[4, 2] = TablutPieceType.BlackPawn;
+            positions[0, 0] = TablutPieceType.BlackPawn;
+            positions[4, 8] = TablutPieceType.BlackPawn;
+            TablutGameMode gameMode = new(positions, startingPlayer);
+
+            for (int fromX = 0; fromX < positions.GetLength(0); fromX++)
+            {
+                for (int fromY = 0; fromY < positions.GetLength(1); fromY++)
+                {
+                    BoardPosition from = new(fromX, fromY);
+                    List<BoardPosition> accepted = new();
+                    for (int toX = 0; toX < positions.GetLength(0); toX++)
+                    {
+                        for (int toY = 0; toY < positions.GetLength(1); toY++)
+                        {
+                            BoardPosition to = new(toX, toY);
+                            // Judge each move from the same untouched starting position.
+                            TablutGameMode attempt = new(positions, startingPlayer);
+                            if (attempt.MovePiece(from, to))
+                            {
+                                accepted.Add(to);
+                            }
+                        }
+                    }
+
+                    CollectionAssert.AreEqual(accepted, gameMode.GetLegalDestinations(from),
+                        $"{startingPlayer} destinations from {from} differ from move execution.");
+                }
+            }
         }
 
         [Test]
@@ -1412,6 +1452,7 @@ namespace Junnav.KingOfTablut.Tests.EditMode
             Assert.AreEqual(GameState.WhiteWon, gameMode.GameState);
 
             AssertRejectedMoveLeavesMatchUnchanged(gameMode, new BoardPosition(0, 2), new BoardPosition(0, 1), InvalidMoveMessage.GameEnded);
+            CollectionAssert.IsEmpty(gameMode.GetLegalDestinations(new BoardPosition(0, 2)));
         }
 
         [Test]
