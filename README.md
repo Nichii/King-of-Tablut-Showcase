@@ -47,6 +47,8 @@ From the repository root, use the .NET 10 SDK to run the board, turn and match t
 dotnet test DotNet/Rules.Tests/Junnav.KingOfTablut.Rules.Tests.csproj
 ```
 
+See the [legal move benchmark](Docs/MoveBenchmark.md) for the Release command and baseline measurements.
+
 ## Project scope
 
 This repository is a playable slice of an independent project. The full commercial project remains under private development. Source and assets here are provided for portfolio review and technical evaluation. All rights reserved, subject to applicable third-party licences.
