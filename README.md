@@ -6,6 +6,16 @@ King of Tablut is a local two-player strategy game built in Unity. The attackers
 
 ![A selected attacker and its legal destinations on the Tablut board](Docs/Gameplay.jpg)
 
+## Engineering highlights
+
+- **Shared rules.** `TablutGameMode` owns the board, turns, and win conditions. The Unity controller reads the match state to render pieces and uses each move result for feedback. The rules assembly has no UnityEngine references. The .NET tests compile the same rules source and NUnit fixtures. [Rules assembly](Assets/Junnav/King%20Of%20Tablut/Code/Scripts/Rules/Junnav.KingOfTablut.Rules.asmdef) · [Unity controller](Assets/Junnav/King%20Of%20Tablut/Code/Scripts/Gameplay/TablutMatchController.cs)
+- **Tactical scenarios.** Scenarios are editable in the Inspector. Validation checks the layout and confirms the starting side has a legal move. Restart creates a fresh match from the asset. [Scenario validation](Assets/Junnav/King%20Of%20Tablut/Code/Scripts/Gameplay/TablutScenario.cs)
+- **Measured move generation.** Walking four directions stops the search at pieces, the throne, and board edges. It ran 2.3–5.3× faster across three standalone .NET benchmark positions, with the same destination sets and allocations. [Legal move benchmark](Docs/MoveBenchmark.md) · [Windows and Web profiling](Docs/PlayerProfiling.md)
+
+### Throne movement regression
+
+One regression came from the throne at `(4,4)`. Moving from `(2,1)` to `(6,1)` was rejected because the path crossed column 4. The [fix checks the full square](https://github.com/Nichii/King-of-Tablut-Showcase/commit/592ccfe) and tests valid moves across both axes, alongside the test that blocks a move through the throne itself.
+
 ## Play
 
 Extract the Windows ZIP and run `King of Tablut.exe`. Click one of your pieces to see where it can move, then click a marked square. Use **Restart** to return to the starting position.
@@ -16,7 +26,7 @@ See the [Tablut rules](Docs/Rules.md) for movement, captures, and how a match en
 
 ### Try the King Escape scenario
 
-Open §TablutGameplayScene§, select **Tablut Match**, and assign **King Escape** from §Level/Scenarios§ to the controller's **Scenario** field. Enter Play Mode and slide the king to the edge. **Restart** reloads the assigned layout. Clear the field to play the standard match.
+Open `TablutGameplayScene`, select **Tablut Match**, and assign **King Escape** from `Level/Scenarios` to the controller's **Scenario** field. Enter Play Mode and slide the king to the edge. **Restart** reloads the assigned layout. Clear the field to play the standard match.
 
 To make a scenario, use **Assets → Create → Tablut → Scenario**. Enter the starting side and piece coordinates from 0 to 8. The asset's **Validate Scenario** menu command reports problems in the Console. If an assigned scenario is invalid, the scene logs the reason and starts a standard match.
 
@@ -31,13 +41,9 @@ Open **File -> Build Profiles**, make the target platform active, and confirm th
 
 To check either build, make an opening move and click **Restart**. The opening position should return with the attackers to move.
 
-## Gameplay code and tests
+## Tests
 
-`TablutGameMode` owns the board, turns, and win conditions. It lives in the `Junnav.KingOfTablut.Rules` assembly, which compiles without UnityEngine references. The Unity scene reads its board state after a move. Move highlights use the same validation as move execution, so the view only offers squares the rules accept.
-
-One regression came from the throne at `(4,4)`. Moving from `(2,1)` to `(6,1)` was rejected because the path crossed column 4. The [fix checks the full square](https://github.com/Nichii/King-of-Tablut-Showcase/commit/592ccfe) and tests valid moves across both axes, alongside the test that blocks a move through the throne itself.
-
-In Unity, open **Window → General → Test Runner**. In **EditMode**, choose **Run All** for the board, turn, and match rules. In **PlayMode**, choose **Run All** for the gameplay scene tests, which check board clicks, move feedback, and restart.
+In Unity, open **Window → General → Test Runner**. In **EditMode**, choose **Run All** for the board, turn, and match rules. In **PlayMode**, choose **Run All** for the gameplay scene tests, which check board clicks, move feedback, and restart. [Rules tests](Assets/Junnav/King%20Of%20Tablut/Code/Tests/Edit%20Mode%20Tests/Gameplay/TestTablutGameMode.cs) · [Scene tests](Assets/Junnav/King%20Of%20Tablut/Code/Tests/Play%20Mode%20Tests/Gameplay/TestTablutGameplayScene.cs)
 
 ### Run the rules tests without Unity
 
@@ -46,8 +52,6 @@ From the repository root, use the .NET 10 SDK to run the board, turn and match t
 ```sh
 dotnet test DotNet/Rules.Tests/Junnav.KingOfTablut.Rules.Tests.csproj
 ```
-
-See the [legal move benchmark](Docs/MoveBenchmark.md) for the Release command and baseline measurements.
 
 ## Project scope
 
