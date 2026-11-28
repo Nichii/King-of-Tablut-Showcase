@@ -22,13 +22,25 @@ namespace Junnav.KingOfTablut.Gameplay
             }
 
             TablutGameMode replay = new(startingPositions, startingPlayer);
+            if (!TryApplyMoves(replay, moves, out failure))
+            {
+                gameMode = null;
+                return false;
+            }
+
+            gameMode = replay;
+            return true;
+        }
+
+        internal static bool TryApplyMoves(TablutGameMode replay, IEnumerable<TablutMove> moves,
+            out (int MoveIndex, InvalidMoveMessage Reason)? failure)
+        {
             int moveIndex = 0;
             foreach (TablutMove move in moves)
             {
                 MoveResult result = replay.MovePieceWithResult(move.From, move.To);
                 if (!result.Succeeded)
                 {
-                    gameMode = null;
                     failure = (moveIndex, result.RejectionReason);
                     return false;
                 }
@@ -36,7 +48,6 @@ namespace Junnav.KingOfTablut.Gameplay
                 moveIndex++;
             }
 
-            gameMode = replay;
             failure = null;
             return true;
         }

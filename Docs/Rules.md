@@ -25,4 +25,10 @@ The current game has no automatic draw for repeated positions and no automatic r
 3. Attacker moves from `(0, 2)` to `(0, 3)`.
 4. Defender moves from `(5, 2)` to `(4, 2)`.
 
+## Replay saves
+
+`TablutReplaySave.Write` stores the starting board and side to move with the move history. Version 1 begins with `TABLUT-REPLAY 1`, then `A` or `D` for the starting side. The next nine lines are board rows in increasing `y` order, with columns in increasing `x` order. The symbols are `.` for an empty square, `K` for the king, `D` for a defender pawn, and `A` for an attacker pawn. Each move occupies one line in `fromX,fromY,toX,toY` order.
+
+`TryLoad` rebuilds a fresh match using the saved layout. A rejected move is reported by its zero-based index and reason.
+
 [Gameplay rules code](../Assets/Junnav/King%20Of%20Tablut/Code/Scripts/Rules/TablutGameMode.cs) · [Rules tests](../Assets/Junnav/King%20Of%20Tablut/Code/Tests/Edit%20Mode%20Tests/Gameplay/TestTablutGameMode.cs)
