@@ -10,8 +10,11 @@ namespace Junnav.KingOfTablut
         [SerializeField] private TMP_Text turnText;
         [SerializeField] private TMP_Text moveText;
         [SerializeField] private TablutScenario scenario;
+        [SerializeField] private bool playAgainstComputer;
+        [SerializeField] private int opponentSeed;
 
         private TablutGameMode gameMode;
+        private RandomTablutOpponent opponent;
         private BoardPosition? selectedSquare;
 
         private void OnEnable()
@@ -32,11 +35,13 @@ namespace Junnav.KingOfTablut
         public void RestartMatch()
         {
             gameMode = CreateMatch();
+            opponent = playAgainstComputer ? new RandomTablutOpponent(opponentSeed) : null;
             selectedSquare = null;
             boardView.ClearSelection();
             boardView.ShowPieces(gameMode);
             UpdateTurnText(gameMode.GameState);
             moveText.text = "Select a piece to see its moves.";
+            PlayComputerTurn();
         }
 
         private TablutGameMode CreateMatch()
@@ -56,7 +61,7 @@ namespace Junnav.KingOfTablut
 
         private void SelectSquare(BoardPosition position)
         {
-            if (gameMode.GameState != GameState.Playing)
+            if (gameMode.GameState != GameState.Playing || IsComputerTurn())
             {
                 return;
             }
@@ -84,11 +89,41 @@ namespace Junnav.KingOfTablut
                 return;
             }
 
-            MoveResult result = gameMode.MovePieceWithResult(selectedSquare.Value, position);
+            if (TryMovePiece(selectedSquare.Value, position))
+            {
+                PlayComputerTurn();
+            }
+        }
+
+        private bool IsComputerTurn()
+        {
+            return opponent != null && gameMode.CurrentPlayer == TablutPlayer.Defender;
+        }
+
+        private void PlayComputerTurn()
+        {
+            if (!IsComputerTurn() || gameMode.GameState != GameState.Playing)
+            {
+                return;
+            }
+
+            if (opponent.TryChooseMove(gameMode, out TablutMove move))
+            {
+                TryMovePiece(move.From, move.To);
+            }
+            else
+            {
+                moveText.text = "The computer has no legal moves.";
+            }
+        }
+
+        private bool TryMovePiece(BoardPosition from, BoardPosition to)
+        {
+            MoveResult result = gameMode.MovePieceWithResult(from, to);
             if (!result.Succeeded)
             {
                 moveText.text = GetInvalidMoveText(result.RejectionReason);
-                return;
+                return false;
             }
 
             selectedSquare = null;
@@ -106,6 +141,8 @@ namespace Junnav.KingOfTablut
                 MoveMessage.CapturedAttackerPawn => "An attacker was captured.",
                 _ => result.GameState == GameState.WhiteWon ? "The king reached the edge." : "Select a piece to see its moves."
             };
+
+            return true;
         }
 
         private void UpdateTurnText(GameState gameState)

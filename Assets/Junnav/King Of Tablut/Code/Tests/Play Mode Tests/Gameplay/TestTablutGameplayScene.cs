@@ -114,6 +114,39 @@ namespace Junnav.KingOfTablut.Tests.PlayMode
 
 #if UNITY_EDITOR
         [UnityTest]
+        public IEnumerator ComputerDefenderRepliesAndRepeatsItsMoveAfterRestart()
+        {
+            yield return SceneManager.LoadSceneAsync("TablutGameplayScene");
+            yield return null;
+
+            const int seed = 24;
+            SerializedObject controller = new(Object.FindFirstObjectByType<TablutMatchController>());
+            controller.FindProperty("playAgainstComputer").boolValue = true;
+            controller.FindProperty("opponentSeed").intValue = seed;
+            controller.ApplyModifiedPropertiesWithoutUndo();
+
+            TablutBoardView boardView = Object.FindFirstObjectByType<TablutBoardView>();
+            SetupPiecePositions piecePositions = boardView.GetComponent<SetupPiecePositions>();
+            Camera camera = Camera.main;
+            BoardPosition from = new(0, 3);
+            BoardPosition to = new(0, 2);
+            TablutGameMode expected = new();
+            Assert.IsTrue(expected.MovePiece(from, to));
+            RandomTablutOpponent opponent = new(seed);
+            Assert.IsTrue(opponent.TryChooseMove(expected, out TablutMove reply));
+
+            for (int i = 0; i < 2; i++)
+            {
+                ClickRestart();
+                MovePiece(boardView, piecePositions, camera, from, to);
+
+                Assert.AreEqual("Attackers to move", GameObject.Find("Attackers to move").GetComponent<TMP_Text>().text);
+                Assert.AreEqual(0, GetPiecesAt(piecePositions, reply.From).Length);
+                Assert.AreEqual(1, GetPiecesAt(piecePositions, reply.To).Length);
+            }
+        }
+
+        [UnityTest]
         public IEnumerator RestartsTheAssignedScenarioWithoutChangingTheAsset()
         {
             yield return SceneManager.LoadSceneAsync("TablutGameplayScene");

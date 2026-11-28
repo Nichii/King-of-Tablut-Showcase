@@ -30,6 +30,12 @@ Open `TablutGameplayScene`, select **Tablut Match**, and assign **King Escape** 
 
 To make a scenario, use **Assets → Create → Tablut → Scenario**. Enter the starting side and piece coordinates from 0 to 8. The asset's **Validate Scenario** menu command reports problems in the Console. If an assigned scenario is invalid, the scene logs the reason and starts a standard match.
 
+### Play against the computer
+
+In `TablutGameplayScene`, select **Tablut Match** and enable **Play Against Computer** in the Inspector. You play the attackers, and the computer picks a legal defender move. **Restart** resets the opponent to the configured **Opponent Seed**. The same seed and moves repeat its choices within the same runtime.
+
+If the computer has no legal move, the match stays on its turn and **Restart** is available. Local two-player play is the default.
+
 ## Build from source
 
 Open the project in Unity **6000.3.24f1**. Install **Web Build Support** for that editor version through Unity Hub if you want a browser build.
