@@ -31,3 +31,5 @@ The comparison used the same machine and runtime, alternating the order of the o
 | Standard opening | 656 (646–658) | 133 (132–144) | 4.9× | 176 |
 | Open row and column | 691 (680–750) | 304 (296–314) | 2.3× | 328 |
 | Lines blocked by pieces and the throne | 587 (569–599) | 110 (52–115) | 5.3× | 88 |
+
+See [player profiling](PlayerProfiling.md) for Windows and Web frame measurements.
